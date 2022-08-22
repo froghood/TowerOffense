@@ -1,7 +1,3 @@
-﻿namespace TowerOffense {
-    class Program {
-        static void Main(string[] args) {
-            System.Console.WriteLine("WOW");
-        }
-    }
-}
+﻿
+using var game = new tower_offense.Game1();
+game.Run();
