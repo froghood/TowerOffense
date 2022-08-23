@@ -1,3 +1,5 @@
 ﻿
-using var game = new tower_offense.Game1();
+using TowerOffense;
+
+using var game = new TOGame();
 game.Run();
