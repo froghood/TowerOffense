@@ -15,8 +15,9 @@ namespace TowerOffense.Window {
         public Form Form { get => _form; }
         public GameWindow Window { get => _window; }
 
-        private GameWindow _window;
+        //private GameWindow _window;
         private Form _form;
+        private Control _control;
         private SwapChainRenderTarget _renderTarget;
 
         public WindowObject(Scene scene, int width, int height) : base(scene) {
@@ -24,20 +25,17 @@ namespace TowerOffense.Window {
             //_window = GameWindow.Create(game, 0, 0);
             //_window.AllowUserResizing = false;
             _form = new Form();
-
             _form.MinimumSize = new(1, 1);
             _form.ClientSize = new(width, height);
+
+            _control = Control.FromHandle(_form.Handle);
 
             _form.ShowIcon = false;
             _form.MinimizeBox = false;
             _form.MaximizeBox = false;
             _form.Text = "";
-            _form.FormBorderStyle = FormBorderStyle.FixedSingle;
+            _form.FormBorderStyle = FormBorderStyle.None;
             _form.TopMost = true;
-
-            //_form.MaximumSize = new(80, 80);
-
-            //Screen.FromControl
 
             _form.FormClosed += (sender, e) => {
                 Destroy();
@@ -66,6 +64,10 @@ namespace TowerOffense.Window {
             base.Destroy();
             _form.Dispose();
             _renderTarget.Dispose();
+        }
+
+        public void GetMousePosition() {
+            Cursor.Position
         }
 
         public abstract void Render(GameTime gameTime);
