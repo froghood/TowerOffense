@@ -7,7 +7,7 @@ namespace TowerOffense.Scenes.Title {
         private TitleWindow _titleWindow;
 
         public TitleScene() : base() {
-            _titleWindow = new TitleWindow(this, new Point(800, 600), new Point(30, 270));
+            _titleWindow = new TitleWindow(this, new Point(800, 600), new Point(60, 60));
             _titleWindow.Form.FormClosed += (_, _) => TOGame.Instance.Exit();
         }
 

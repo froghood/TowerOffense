@@ -20,30 +20,32 @@ namespace TowerOffense.Objects.Base {
         }
 
         public Color ClearColor { get; set; } = Color.Black;
-        public GameWindow Window { get => _window; }
+        //public GameWindow Window { get => _window; }
         public Form Form { get => _form; }
 
-        private GameWindow _window;
+        //private GameWindow _window;
         private Form _form;
         private SwapChainRenderTarget _renderTarget;
 
         public SceneWindow(Scene scene, Point position, Point size) : base(scene) {
             var game = TOGame.Instance;
 
-            _window = GameWindow.Create(TOGame.Instance, 0, 0);
+            //_window = GameWindow.Create(TOGame.Instance, 0, 0);
 
-            _form = (Form)Form.FromHandle(_window.Handle);
-            _form.Visible = true;
-            _form.MinimumSize = new(1, 1);
+            _form = new Form();
             _form.Location = new System.Drawing.Point(position.X, position.Y);
+            _form.MinimumSize = new(1, 1);
             _form.ClientSize = new System.Drawing.Size(size.X, size.Y);
-            //_form.Size = _form.ClientSize;
+
+            //_form.ControlBox = false;
+
             _form.ShowIcon = false;
             _form.MinimizeBox = false;
             _form.MaximizeBox = false;
             _form.Text = "";
-            _form.FormBorderStyle = FormBorderStyle.Sizable;
+            _form.FormBorderStyle = FormBorderStyle.FixedSingle;
             _form.TopMost = true;
+            _form.Visible = true;
 
             _form.FormClosed += (sender, e) => {
                 Destroy();
