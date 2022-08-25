@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,15 +12,22 @@ namespace TowerOffense.Window {
         public Point Position { get => _window.Position; set => _window.Position = value; }
         public Color ClearColor { get; set; } = Color.Black;
 
+        public Form Form { get => _form; }
+        public GameWindow Window { get => _window; }
+
         private GameWindow _window;
         private Form _form;
         private SwapChainRenderTarget _renderTarget;
 
         public WindowObject(Scene scene, int width, int height) : base(scene) {
             var game = TOGame.Instance;
-            _window = GameWindow.Create(game, width, height);
-            _form = (Form)Form.FromHandle(_window.Handle);
-            _form.Visible = true;
+            //_window = GameWindow.Create(game, 0, 0);
+            //_window.AllowUserResizing = false;
+            _form = new Form();
+
+            _form.MinimumSize = new(1, 1);
+            _form.ClientSize = new(width, height);
+
             _form.ShowIcon = false;
             _form.MinimizeBox = false;
             _form.MaximizeBox = false;
@@ -27,21 +35,31 @@ namespace TowerOffense.Window {
             _form.FormBorderStyle = FormBorderStyle.FixedSingle;
             _form.TopMost = true;
 
+            //_form.MaximumSize = new(80, 80);
+
+            //Screen.FromControl
+
             _form.FormClosed += (sender, e) => {
                 Destroy();
             };
 
             _renderTarget = new SwapChainRenderTarget(
                 game.GraphicsDevice,
-                _window.Handle,
-                _window.ClientBounds.Width,
-                _window.ClientBounds.Height,
+                _form.Handle,
+                _form.ClientSize.Width,
+                _form.ClientSize.Height,
                 false,
                 SurfaceFormat.Color,
                 DepthFormat.Depth24Stencil8,
                 1,
                 RenderTargetUsage.PlatformContents,
                 PresentInterval.Default);
+
+            _form.Visible = true;
+        }
+
+        private void t(object sender, EventArgs e) {
+            System.Console.WriteLine(e);
         }
 
         public override void Destroy() {
