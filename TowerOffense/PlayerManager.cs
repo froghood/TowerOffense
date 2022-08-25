@@ -1,11 +1,10 @@
+using TowerOffense;
+using TowerOffense.Scenes.GameOver;
 namespace PlayerManager{
     public class PlayerManager {
         private int _hp;
-        // private List<Tower> _towers; // uncomment once towers exist
 
-        // Q: How do we give the player manager access to the sceneManager? Constructor could be public and do the get check instead. Or, initialize might be a thing. Hmmmm.
-        // Could SceneManager also be a singleton? Are we ever going to need more than one?
-        private PlayerManager() {}
+        public PlayerManager() {}
         private static PlayerManager instance = null;
         public static PlayerManager Instance {
             get {
@@ -23,7 +22,7 @@ namespace PlayerManager{
             }
         }
         public void Die(){
-            // go to gameover
+            TOGame.Scenes.PushScene<GameOverScene>();
         }
     }
 }
