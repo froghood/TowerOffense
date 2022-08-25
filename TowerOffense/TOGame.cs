@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Input;
 using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 using Keys = Microsoft.Xna.Framework.Input.Keys;
 
-using TowerOffense.Window;
 using System;
 using TowerOffense.Scenes;
 using Microsoft.Xna.Framework.Content;
@@ -16,20 +15,23 @@ namespace TowerOffense {
 
         public static TOGame Instance;
 
+        public static AssetManager Assets { get => Instance._assets; }
         public static SceneManager Scenes { get => Instance._scenes; }
         public static SpriteBatch SpriteBatch { get => Instance._spriteBatch; }
         public static Random Random { get => Instance._random; }
 
+        private AssetManager _assets;
         private SceneManager _scenes;
         private Queue<Action> _commandQueue;
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Random _random;
 
-        public TOGame() {
+        public TOGame() : base() {
 
             Instance = this;
 
+            _assets = new AssetManager(Content);
             _scenes = new SceneManager();
             _commandQueue = new Queue<Action>();
             _graphics = new GraphicsDeviceManager(this);
@@ -48,15 +50,33 @@ namespace TowerOffense {
         }
 
         protected override void Initialize() {
+
+            var form = (Form)Form.FromHandle(Window.Handle);
+
+            // move it super far out of vision; without this you can still see it before it disappears
+            // kinda hacky but i cant find a better way to do it
+            form.Location = new System.Drawing.Point(int.MaxValue, 0);
+
+            // instantly hide the main window as soon we are able to
+            form.Activated += (sender, e) => {
+                form.Hide();
+            };
+
             base.Initialize();
         }
 
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // prob should make something more dynamic
+            _assets.LoadTexture("Sprites/Title");
+            _assets.LoadTexture("Sprites/PlayButton");
+            _assets.LoadTexture("Sprites/PlayButtonHover");
+
+            base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime) {
-
             while (_commandQueue.Count > 0) {
                 _commandQueue.Dequeue().Invoke();
             }
@@ -72,9 +92,7 @@ namespace TowerOffense {
         protected override void Draw(GameTime gameTime) {
 
             _scenes.CurrentScene.Render(gameTime);
-
             GraphicsDevice.SetRenderTarget(null);
-            GraphicsDevice.Clear(Color.Black);
 
             base.Draw(gameTime);
         }
