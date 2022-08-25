@@ -37,7 +37,8 @@ namespace TowerOffense.Scenes.Title.Objects {
         public override void Update(GameTime gameTime) {
             _playButton.Update(gameTime);
 
-            //System.Console.WriteLine($"FormClientSize: {Form.ClientSize}, FormSize: {Form.Size}, WindowBounds: {Window.ClientBounds}");
+            System.Console.WriteLine($"FormClientSize: {Form.ClientSize}, FormSize: {Form.Size}, WindowBounds: {Window.ClientBounds}");
+            System.Console.WriteLine($"MinimumSize: {Form.MinimumSize}, MaximumSize: {Form.MaximumSize}");
         }
 
         public override void Render(GameTime gameTime) {
