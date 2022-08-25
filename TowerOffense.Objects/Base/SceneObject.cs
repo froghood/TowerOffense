@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework;
+using TowerOffense.Scenes;
 
-namespace TowerOffense.Scenes.Objects {
+namespace TowerOffense.Objects.Base {
     public abstract class SceneObject {
 
         public bool IsDestroyed { get; private set; }
