@@ -6,6 +6,7 @@ using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
 using TowerOffense.Scenes.Example;
+using TowerOffense.Scenes.Wave;
 
 namespace TowerOffense.Scenes.Title.Objects {
     public class TitleWindow : SceneWindow {
@@ -24,7 +25,7 @@ namespace TowerOffense.Scenes.Title.Objects {
             _playButton = new Button(this, playButtonPosition, playButtonSize);
 
             _playButton.Clicked += (_, _) => {
-                TOGame.Scenes.PushScene<ExampleScene>();
+                TOGame.Scenes.PushScene<WaveScene>();
             };
 
             _playButton.Texture = TOGame.Assets.Textures["Sprites/PlayButton"];

@@ -13,17 +13,16 @@ namespace TowerOffense.Objects.Base {
 
         public Point Position {
             get => new Point(_form.Location.X, _form.Location.Y);
-            set => _form.Location = new(value.X, value.Y);
+            set => _form.Location = new System.Drawing.Point(value.X, value.Y);
         }
 
         public Point Size {
             get => new Point(_form.ClientSize.Width, _form.ClientSize.Height);
-            set => _form.ClientSize = new(value.X, value.Y);
+            set => _form.ClientSize = new System.Drawing.Size(value.X, value.Y);
         }
 
         public Color ClearColor { get; set; } = Color.Black;
-        public GameWindow Window { get => _window; }
-        public Form Form { get => _form; }
+
         public bool Controllable {
             get => _controllable;
             set {
@@ -33,10 +32,22 @@ namespace TowerOffense.Objects.Base {
             }
         }
 
+        public bool ClosingEnabled {
+            get => _closingEnabled;
+            set {
+                _closingEnabled = value;
+                EnableMenuItem(GetSystemMenu(_form.Handle, false), 0xF060, value ? 0u : 1u);
+            }
+        }
+
+        public GameWindow Window { get => _window; }
+        public Form Form { get => _form; }
+
         private GameWindow _window;
         private Form _form;
         private SwapChainRenderTarget _renderTarget;
         private bool _controllable = true;
+        private bool _closingEnabled = true;
 
         public SceneWindow(Scene scene, Point position, Point size) : base(scene) {
 
@@ -87,5 +98,13 @@ namespace TowerOffense.Objects.Base {
         }
 
         public abstract void Render(GameTime gameTime);
+
+        // for disabling close button
+        [DllImport("user32")]
+        private static extern IntPtr GetSystemMenu(IntPtr hWnd, bool bRevert);
+
+        [DllImport("user32")]
+        private static extern bool EnableMenuItem(IntPtr hMenu, uint itemId, uint uEnable);
+
     }
 }
