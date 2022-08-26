@@ -20,8 +20,6 @@ namespace TowerOffense.Scenes.Example.Objects {
             _random = new Random();
             for (int i = 0; i < numSegments; i++) {
                 _segments.Add(new Segment(Scene, position, new Point(60 - 5 * i, 60 - 5 * i), this));
-
-
             }
         }
 
