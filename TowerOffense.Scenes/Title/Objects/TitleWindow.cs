@@ -17,8 +17,8 @@ namespace TowerOffense.Scenes.Title.Objects {
             var playButtonSize = new Point(96, 64);
 
             var playButtonPosition = new Vector2() {
-                X = Size.X * 0.5f - playButtonSize.X * 0.5f,
-                Y = Size.Y * 0.75f - playButtonSize.Y * 0.5f
+                X = InnerSize.X * 0.5f - playButtonSize.X * 0.5f,
+                Y = InnerSize.Y * 0.75f - playButtonSize.Y * 0.5f
             }.ToPoint();
 
             _playButton = new Button(this, playButtonPosition, playButtonSize);
@@ -33,11 +33,13 @@ namespace TowerOffense.Scenes.Title.Objects {
 
         public override void Update(GameTime gameTime) {
             _playButton.Update(gameTime);
+            base.Update(gameTime);
         }
 
         public override void Render(GameTime gameTime) {
-            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures["Sprites/Title"], Vector2.Zero, Color.White);
+            Draw(TOGame.Assets.Textures["Sprites/Title"], Vector2.Zero, Color.White);
             _playButton.Render(gameTime);
+            base.Render(gameTime);
         }
 
 

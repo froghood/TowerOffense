@@ -1,63 +1,119 @@
+using System;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using TowerOffense.Scenes;
-using TowerOffense;
-using System.Runtime.InteropServices;
-using System;
+using ButtonState = Microsoft.Xna.Framework.Input.ButtonState;
 
 namespace TowerOffense.Objects.Base {
     public abstract class SceneWindow : SceneObject {
 
-        public SwapChainRenderTarget RenderTarget { get => _renderTarget; }
 
         public Point Position {
             get => new Point(_form.Location.X, _form.Location.Y);
-            set => _form.Location = new(value.X, value.Y);
+            set => _form.Location = new System.Drawing.Point(value.X, value.Y);
+        }
+
+        public Point InnerSize {
+            get => new Point() {
+                X = _form.ClientSize.Width - _borderThickness * 2,
+                Y = _form.ClientSize.Height - _titleBarHeight - _borderThickness * 2
+            };
         }
 
         public Point Size {
             get => new Point(_form.ClientSize.Width, _form.ClientSize.Height);
-            set => _form.ClientSize = new(value.X, value.Y);
         }
+
+        /// <summary>
+        /// altering this could potentially break things, use at your own risk.
+        /// </summary>
+        public GameWindow Window { get => _window; }
+
+        /// <summary>
+        /// altering this could potentially break things, use at your own risk.
+        /// </summary>
+        public Form Form { get => _form; }
 
         public Color ClearColor { get; set; } = Color.Black;
-        public GameWindow Window { get => _window; }
-        public Form Form { get => _form; }
-        public bool Controllable {
-            get => _controllable;
-            set {
-                _controllable = value;
-                _form.ControlBox = value;
-                _form.FormBorderStyle = value ? FormBorderStyle.FixedSingle : FormBorderStyle.FixedToolWindow;
-            }
-        }
+        public SwapChainRenderTarget RenderTarget { get => _renderTarget; }
+        public bool IsBeingDragged { get => _isBeingDragged; }
+        public bool Draggable { get; set; } = true;
+        public bool Closeable { get; set; } = true;
+        public int TitleBarHeight { get => _titleBarHeight; }
+        public Color TitleBarColor { get; set; } = Color.White;
+        public int BorderThickness { get => _borderThickness; }
+        public Color BorderColor { get; set; } = Color.White;
+        public Color FocusedBorderColor { get; set; } = new Color(180, 180, 180);
+        public Vector2 InnerWindowOffset { get => new Vector2(_borderThickness, _borderThickness + _titleBarHeight); }
+        public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
+        public MouseState MouseState { get => _mouseState; }
+        public bool IsMouseHovering { get => _isMouseHovering; }
 
-        private GameWindow _window;
+        public event EventHandler Closed;
+
         private Form _form;
-        private SwapChainRenderTarget _renderTarget;
-        private bool _controllable = true;
+        private GameWindow _window;
 
-        public SceneWindow(Scene scene, Point position, Point size) : base(scene) {
+        private int _titleBarHeight;
+        private int _borderThickness;
+
+        private MouseState _mouseState;
+        private bool _isMouseHovering;
+
+        private bool _isBeingDragged;
+        private Point _dragOffset;
+
+        private Rectangle _closeBounds;
+        private Texture2D _closeTexture;
+        private bool _closeIsHovered;
+        private bool _closeIsPressed;
+
+        private bool _mousePressedFlag;
+
+        private Texture2D _pixel;
+
+        private SwapChainRenderTarget _renderTarget;
+
+        public SceneWindow(Scene scene, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene) {
 
             var game = TOGame.Instance;
-
-            _window = GameWindow.Create(TOGame.Instance, 0, 0);
+            _window = GameWindow.Create(game, 0, 0);
             _form = (Form)Form.FromHandle(_window.Handle);
 
-            _form.Location = new(position.X, position.X);
-            _form.ClientSize = new(size.X, size.Y);
-            _form.ShowIcon = false;
-            _form.MinimizeBox = false;
+            _form.FormBorderStyle = FormBorderStyle.None;
             _form.MaximizeBox = false;
+            _form.MinimizeBox = false;
             _form.Text = "";
-            _form.FormBorderStyle = FormBorderStyle.FixedSingle;
+            _form.ShowIcon = false;
+            _form.ControlBox = false;
             _form.TopMost = true;
             _form.Visible = true;
 
-            _form.FormClosed += (sender, e) => {
-                Destroy();
+            Position = position;
+            _titleBarHeight = titleBarHeight;
+            _borderThickness = borderThickness;
+            _form.ClientSize = new System.Drawing.Size() {
+                Width = size.X + _borderThickness * 2,
+                Height = size.Y + _titleBarHeight + _borderThickness * 2
             };
+
+            _form.FormClosing += (sender, e) => {
+                if (!Closeable) {
+                    e.Cancel = true;
+                    return;
+                }
+                Close();
+            };
+
+            ClearColor = Color.Black;
+            CalculateCloseBounds();
+
+            _closeTexture = TOGame.Assets.Textures["Sprites/Close"];
+
+            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
+            _pixel.SetData(new[] { Color.White });
 
             _renderTarget = new SwapChainRenderTarget(
                 game.GraphicsDevice,
@@ -70,22 +126,120 @@ namespace TowerOffense.Objects.Base {
                 1,
                 RenderTargetUsage.PlatformContents,
                 PresentInterval.Default);
+
         }
 
-        public virtual void Hide() {
+
+
+        public override void Update(GameTime gameTime) {
+
+            // window dragging & close button
+            if (!Draggable) _isBeingDragged = false;
+            if (_isBeingDragged) _form.Location = new System.Drawing.Point(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
+
+            _closeIsHovered = (_isMouseHovering &&
+                _mouseState.X >= _closeBounds.Left - 1 && _mouseState.X < _closeBounds.Right + 1 &&
+                _mouseState.Y >= _closeBounds.Top - 1 && _mouseState.Y < _closeBounds.Bottom);
+
+            switch (_mouseState.LeftButton) {
+                case ButtonState.Pressed:
+                    // ensures only the first frame of ButtonState.Pressed gets through
+                    if (!_form.Focused || _mousePressedFlag) break;
+
+                    // true if the close button is being hovered but is not already being pressed or the window is being dragged
+                    if (!_closeIsPressed && !_isBeingDragged && _closeIsHovered) _closeIsPressed = true;
+
+                    if (_closeIsPressed) break; // dont drag if close is being pressed
+
+                    if (!_isBeingDragged && // check if the mouse is within the bounds of the draggable area
+                    _mouseState.X >= 0 && _mouseState.X < _form.ClientSize.Width &&
+                    _mouseState.Y >= 0 && _mouseState.Y < _titleBarHeight + _borderThickness) {
+                        _isBeingDragged = true;
+                        _dragOffset = new Point(_mouseState.X, _mouseState.Y);
+                    }
+                    _mousePressedFlag = true;
+                    break;
+                case ButtonState.Released:
+                    _mousePressedFlag = false;
+                    if (_closeIsPressed) {
+                        if (_closeIsHovered) _form.Close();
+                        _closeIsPressed = false;
+                    }
+                    _isBeingDragged = false;
+                    break;
+            }
+        }
+
+        public virtual void Render(GameTime gameTime) {
+
+            //title bar
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_borderThickness, _borderThickness, _form.ClientSize.Width - _borderThickness, _titleBarHeight), TitleBarColor);
+
+            //border
+            var borderColor = _form.Focused ? FocusedBorderColor : BorderColor;
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _borderThickness, _form.ClientSize.Height), borderColor);
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_form.ClientSize.Width - _borderThickness, 0, _borderThickness, _form.ClientSize.Height), borderColor);
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, _form.ClientSize.Height - _borderThickness, _form.ClientSize.Width, _borderThickness), borderColor);
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _form.ClientSize.Width, _borderThickness), borderColor);
+
+            //close
+            var closeColor = (Closeable, _isBeingDragged, _closeIsHovered, _closeIsPressed) switch {
+                (true, false, true, false) => new Color(0, 0, 0, 50),
+                (true, false, true, true) => new Color(0, 0, 0, 70),
+                _ => new Color(0, 0, 0, 0)
+            };
+
+            TOGame.SpriteBatch.Draw(_pixel, _closeBounds, closeColor);
+            TOGame.SpriteBatch.Draw(_closeTexture, new Vector2() {
+                X = _closeBounds.X + _closeBounds.Width / 2 - _closeTexture.Width / 2,
+                Y = _closeBounds.Y + _closeBounds.Height / 2 - _closeTexture.Height / 2
+            }, Closeable ? Color.White : new Color(255, 255, 255, 70));
+        }
+
+        public void Draw(Texture2D texture, Vector2 position, Color color) {
+            TOGame.SpriteBatch.Draw(texture, position + new Vector2(_borderThickness, _titleBarHeight + _borderThickness), color);
+        }
+
+        public virtual void Close() {
+            Closed?.Invoke(this, EventArgs.Empty);
+            Destroy();
+        }
+
+        public void Hide() {
             _form.Hide();
         }
 
-        public virtual void Show() {
+        public void Show() {
             _form.Show();
         }
 
         public override void Destroy() {
-            base.Destroy();
             _form.Dispose();
             _renderTarget.Dispose();
+            base.Destroy();
         }
 
-        public abstract void Render(GameTime gameTime);
+        public void UpdateMouseState(MouseState mouseState, bool resetMouseHovering) {
+            _mouseState = mouseState;
+            if (resetMouseHovering) _isMouseHovering = false;
+        }
+
+        public bool UpdateMouseHovering() {
+            _isMouseHovering = (_mouseState.X >= 0 && _mouseState.X < _form.ClientSize.Width &&
+            _mouseState.Y >= 0 && _mouseState.Y < _form.ClientSize.Height);
+            return _isMouseHovering;
+        }
+
+        private void CalculateCloseBounds() {
+            var closeSize = new Point() {
+                X = Math.Min(_form.ClientSize.Width - _borderThickness * 2, _titleBarHeight),
+                Y = _titleBarHeight
+            };
+            var closePosition = new Point() {
+                X = Math.Max(_borderThickness, _form.ClientSize.Width - _borderThickness - closeSize.X),
+                Y = _borderThickness,
+            };
+            _closeBounds = new Rectangle(closePosition, closeSize);
+        }
     }
 }
