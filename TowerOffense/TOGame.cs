@@ -19,6 +19,7 @@ namespace TowerOffense {
         public static SceneManager Scenes { get => Instance._scenes; }
         public static SpriteBatch SpriteBatch { get => Instance._spriteBatch; }
         public static Random Random { get => Instance._random; }
+        public static PlayerManager PlayerManager { get => Instance._playerManager; }
 
         private AssetManager _assets;
         private SceneManager _scenes;
@@ -26,6 +27,7 @@ namespace TowerOffense {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
         private Random _random;
+        private PlayerManager _playerManager;
 
         public TOGame() : base() {
 
@@ -36,6 +38,7 @@ namespace TowerOffense {
             _commandQueue = new Queue<Action>();
             _graphics = new GraphicsDeviceManager(this);
             _random = new Random();
+            _playerManager = PlayerManager.Instance;
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;

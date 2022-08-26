@@ -197,7 +197,11 @@ namespace TowerOffense.Objects.Base {
         }
 
         public void Draw(Texture2D texture, Vector2 position, Color color) {
-            TOGame.SpriteBatch.Draw(texture, position + new Vector2(_borderThickness, _titleBarHeight + _borderThickness), color);
+            TOGame.SpriteBatch.Draw(texture, position + InnerWindowOffset, color);
+        }
+
+        public void DrawString(SpriteFont font, string text, Vector2 position, Color color) {
+            TOGame.SpriteBatch.DrawString(font, text, position + InnerWindowOffset, color);
         }
 
         public virtual void Close() {
