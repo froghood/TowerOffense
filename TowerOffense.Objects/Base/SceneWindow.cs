@@ -177,9 +177,9 @@ namespace TowerOffense.Objects.Base {
             //close
 
 
-            var closeColor = (_closeable, _closeIsHovered, _closeIsPressed) switch {
-                (true, true, false) => new Color(0, 0, 0, 50),
-                (true, true, true) => new Color(0, 0, 0, 70),
+            var closeColor = (_closeable, _isBeingDragged, _closeIsHovered, _closeIsPressed) switch {
+                (true, false, true, false) => new Color(0, 0, 0, 50),
+                (true, false, true, true) => new Color(0, 0, 0, 70),
                 _ => new Color(0, 0, 0, 0)
             };
 
