@@ -5,7 +5,6 @@ using TowerOffense.Objects.Base;
 namespace TowerOffense.Scenes.HpTest.Objects {
     public class HpKiller : SceneObject {
 
-        private PlayerManager _playerManager = PlayerManager.Instance;
         private double timeCount = 0;
         private double timeLimit = 1;
 
@@ -14,7 +13,7 @@ namespace TowerOffense.Scenes.HpTest.Objects {
         public override void Update(GameTime gameTime) {
             timeCount += gameTime.ElapsedGameTime.TotalSeconds;
             if ( timeCount > timeLimit ){
-                _playerManager.SubtractHp(5);
+                TOGame.PlayerManager.SubtractHp(5);
                 timeCount = 0;
             }
         }

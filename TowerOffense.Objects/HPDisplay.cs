@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TowerOffense.Objects {
     public class HpDisplay : SceneWindow {
-        private PlayerManager _playerManager = PlayerManager.Instance;
         private SpriteFont _font;
         private string _text;
 
@@ -14,12 +13,14 @@ namespace TowerOffense.Objects {
         }
 
         public override void Update(GameTime gameTime){
-            _text = _playerManager.Hp.ToString();
+            _text = TOGame.PlayerManager.Hp.ToString();
+            base.Update(gameTime);
         }
         public override void Render(GameTime gameTime){
             Vector2 textMiddlePoint = _font.MeasureString(_text) / 2;
-            Vector2 position = new Vector2(16,16); // some work to center this would be cool
-            TOGame.SpriteBatch.DrawString(_font, _text, position, Color.Red);
+            Vector2 position = new Vector2(48,48); // some work to center this would be cool
+            DrawString(_font, _text, position, Color.Red);
+            base.Render(gameTime);
         }
     }
 }
