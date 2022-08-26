@@ -26,8 +26,16 @@ namespace TowerOffense.Objects.Base {
             get => new Point(_form.ClientSize.Width, _form.ClientSize.Height);
         }
 
+        /// <summary>
+        /// altering this could potentially break things, use at your own risk.
+        /// </summary>
         public GameWindow Window { get => _window; }
+
+        /// <summary>
+        /// altering this could potentially break things, use at your own risk.
+        /// </summary>
         public Form Form { get => _form; }
+
         public Color ClearColor { get => _clearColor; set => _clearColor = value; }
         public SwapChainRenderTarget RenderTarget { get => _renderTarget; }
         public bool IsBeingDragged { get => _isBeingDragged; }
