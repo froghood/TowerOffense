@@ -36,16 +36,16 @@ namespace TowerOffense.Objects.Base {
         /// </summary>
         public Form Form { get => _form; }
 
-        public Color ClearColor { get => _clearColor; set => _clearColor = value; }
+        public Color ClearColor { get; set; } = Color.Black;
         public SwapChainRenderTarget RenderTarget { get => _renderTarget; }
         public bool IsBeingDragged { get => _isBeingDragged; }
-        public bool Draggable { get => _draggable; set => _draggable = value; }
-        public bool Closeable { get => _closeable; set => _closeable = value; }
+        public bool Draggable { get; set; } = true;
+        public bool Closeable { get; set; } = true;
         public int TitleBarHeight { get => _titleBarHeight; }
-        public Color TitleBarColor { get => _titleBarColor; set => _titleBarColor = value; }
+        public Color TitleBarColor { get; set; } = Color.White;
         public int BorderThickness { get => _borderThickness; }
-        public Color BorderColor { get => _borderColor; set => _borderColor = value; }
-        public Color FocusedBorderColor { get => _focusedBorderColor; set => _focusedBorderColor = value; }
+        public Color BorderColor { get; set; } = Color.White;
+        public Color FocusedBorderColor { get; set; } = new Color(180, 180, 180);
         public Vector2 InnerWindowOffset { get => new Vector2(_borderThickness, _borderThickness + _titleBarHeight); }
         public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
         public MouseState MouseState { get => _mouseState; }
@@ -54,20 +54,13 @@ namespace TowerOffense.Objects.Base {
         public event EventHandler Closed;
 
         private Form _form;
-        private TOGame _game;
         private GameWindow _window;
-        private Color _clearColor;
 
         private int _titleBarHeight;
-        private Color _titleBarColor = Color.White;
         private int _borderThickness;
-        private Color _borderColor = new Color(80, 80, 80);
-        private Color _focusedBorderColor = new Color(180, 180, 180);
-
-        private bool _draggable = true;
-        private bool _closeable = true;
 
         private MouseState _mouseState;
+        private bool _isMouseHovering;
 
         private bool _isBeingDragged;
         private Point _dragOffset;
@@ -77,18 +70,16 @@ namespace TowerOffense.Objects.Base {
         private bool _closeIsHovered;
         private bool _closeIsPressed;
 
-        private bool _isMouseHovering;
         private bool _mousePressedFlag;
 
         private Texture2D _pixel;
 
         private SwapChainRenderTarget _renderTarget;
 
-        public SceneWindow(Scene scene, Point position, Point size) : this(scene, position, size, 24, 1) { }
-        public SceneWindow(Scene scene, Point position, Point size, int titleBarHeight, int borderThickness) : base(scene) {
-            _game = TOGame.Instance;
+        public SceneWindow(Scene scene, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene) {
 
-            _window = GameWindow.Create(_game, 0, 0);
+            var game = TOGame.Instance;
+            _window = GameWindow.Create(game, 0, 0);
             _form = (Form)Form.FromHandle(_window.Handle);
 
             _form.FormBorderStyle = FormBorderStyle.None;
@@ -99,34 +90,33 @@ namespace TowerOffense.Objects.Base {
             _form.ControlBox = false;
             _form.TopMost = true;
             _form.Visible = true;
-            Position = position;
 
+            Position = position;
             _titleBarHeight = titleBarHeight;
             _borderThickness = borderThickness;
-
             _form.ClientSize = new System.Drawing.Size() {
                 Width = size.X + _borderThickness * 2,
                 Height = size.Y + _titleBarHeight + _borderThickness * 2
             };
 
             _form.FormClosing += (sender, e) => {
-                if (!_closeable) {
+                if (!Closeable) {
                     e.Cancel = true;
                     return;
                 }
                 Close();
             };
 
-            _clearColor = Color.Black;
+            ClearColor = Color.Black;
             CalculateCloseBounds();
 
             _closeTexture = TOGame.Assets.Textures["Sprites/Close"];
 
-            _pixel = new Texture2D(_game.GraphicsDevice, 1, 1);
+            _pixel = new Texture2D(game.GraphicsDevice, 1, 1);
             _pixel.SetData(new[] { Color.White });
 
             _renderTarget = new SwapChainRenderTarget(
-                _game.GraphicsDevice,
+                game.GraphicsDevice,
                 _form.Handle,
                 _form.ClientSize.Width,
                 _form.ClientSize.Height,
@@ -144,7 +134,7 @@ namespace TowerOffense.Objects.Base {
         public override void Update(GameTime gameTime) {
 
             // window dragging & close button
-            if (!_draggable) _isBeingDragged = false;
+            if (!Draggable) _isBeingDragged = false;
             if (_isBeingDragged) _form.Location = new System.Drawing.Point(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
 
             _closeIsHovered = (_isMouseHovering &&
@@ -153,11 +143,15 @@ namespace TowerOffense.Objects.Base {
 
             switch (_mouseState.LeftButton) {
                 case ButtonState.Pressed:
-                    if (!_form.Focused) return;
-                    if (_mousePressedFlag) break;
+                    // ensures only the first frame of ButtonState.Pressed gets through
+                    if (!_form.Focused || _mousePressedFlag) break;
+
+                    // true if the close button is being hovered but is not already being pressed or the window is being dragged
                     if (!_closeIsPressed && !_isBeingDragged && _closeIsHovered) _closeIsPressed = true;
-                    if (_closeIsPressed) break;
-                    if (!_isBeingDragged &&
+
+                    if (_closeIsPressed) break; // dont drag if close is being pressed
+
+                    if (!_isBeingDragged && // check if the mouse is within the bounds of the draggable area
                     _mouseState.X >= 0 && _mouseState.X < _form.ClientSize.Width &&
                     _mouseState.Y >= 0 && _mouseState.Y < _titleBarHeight + _borderThickness) {
                         _isBeingDragged = true;
@@ -179,17 +173,17 @@ namespace TowerOffense.Objects.Base {
         public virtual void Render(GameTime gameTime) {
 
             //title bar
-            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_borderThickness, _borderThickness, _form.ClientSize.Width - _borderThickness, _titleBarHeight), _titleBarColor);
+            TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_borderThickness, _borderThickness, _form.ClientSize.Width - _borderThickness, _titleBarHeight), TitleBarColor);
 
             //border
-            var borderColor = _form.Focused ? _focusedBorderColor : _borderColor;
+            var borderColor = _form.Focused ? FocusedBorderColor : BorderColor;
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _borderThickness, _form.ClientSize.Height), borderColor);
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_form.ClientSize.Width - _borderThickness, 0, _borderThickness, _form.ClientSize.Height), borderColor);
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, _form.ClientSize.Height - _borderThickness, _form.ClientSize.Width, _borderThickness), borderColor);
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _form.ClientSize.Width, _borderThickness), borderColor);
 
             //close
-            var closeColor = (_closeable, _isBeingDragged, _closeIsHovered, _closeIsPressed) switch {
+            var closeColor = (Closeable, _isBeingDragged, _closeIsHovered, _closeIsPressed) switch {
                 (true, false, true, false) => new Color(0, 0, 0, 50),
                 (true, false, true, true) => new Color(0, 0, 0, 70),
                 _ => new Color(0, 0, 0, 0)
@@ -199,7 +193,7 @@ namespace TowerOffense.Objects.Base {
             TOGame.SpriteBatch.Draw(_closeTexture, new Vector2() {
                 X = _closeBounds.X + _closeBounds.Width / 2 - _closeTexture.Width / 2,
                 Y = _closeBounds.Y + _closeBounds.Height / 2 - _closeTexture.Height / 2
-            }, _closeable ? Color.White : new Color(255, 255, 255, 70));
+            }, Closeable ? Color.White : new Color(255, 255, 255, 70));
         }
 
         public void Draw(Texture2D texture, Vector2 position, Color color) {
