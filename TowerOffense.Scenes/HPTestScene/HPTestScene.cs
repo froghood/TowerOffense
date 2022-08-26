@@ -1,20 +1,20 @@
-using TowerOffense.Scenes.HPTest.Objects;
+using TowerOffense.Scenes.HpTest.Objects;
 using TowerOffense.Objects;
 using Microsoft.Xna.Framework;
-namespace TowerOffense.Scenes.HPTestScene {
+namespace TowerOffense.Scenes.HpTest {
 
-    public class HPTestScene : Scene {
-        private HPKiller hpk;
-        private HPDisplay hpd;
-        public HPTestScene(){
-            hpk = new HPKiller(this);
-            hpd = new HPDisplay(this,new Point(0,0),new Point(120,120));
-            this.AddObject(hpk);
-            this.AddObject(hpd);
+    public class HpTestScene : Scene {
+        private HpKiller hpKiller;
+        private HpDisplay hpDisplay;
+        public HpTestScene(){
+            hpKiller = new HpKiller(this);
+            hpDisplay = new HpDisplay(this,new Point(0,0),new Point(120,120));
+            this.AddObject(hpKiller);
+            this.AddObject(hpDisplay);
         }
 
         public override void Initialize() {
-            System.Console.WriteLine("HPTestScene Initialized");
+            System.Console.WriteLine("HpTestScene Initialized");
         }
     }
 }

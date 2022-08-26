@@ -2,20 +2,19 @@ using Microsoft.Xna.Framework;
 using TowerOffense;
 using TowerOffense.Objects.Base;
 
-namespace TowerOffense.Scenes.HPTest.Objects {
-    public class HPKiller : SceneObject {
+namespace TowerOffense.Scenes.HpTest.Objects {
+    public class HpKiller : SceneObject {
 
         private PlayerManager _playerManager = PlayerManager.Instance;
-        private SceneWindow _window;
         private double timeCount = 0;
         private double timeLimit = 1;
 
-        public HPKiller(Scene scene) : base(scene) { }
+        public HpKiller(Scene scene) : base(scene) { }
 
         public override void Update(GameTime gameTime) {
             timeCount += gameTime.ElapsedGameTime.TotalSeconds;
             if ( timeCount > timeLimit ){
-                _playerManager.SubtractHP(5);
+                _playerManager.SubtractHp(5);
                 timeCount = 0;
             }
         }

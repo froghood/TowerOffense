@@ -4,7 +4,7 @@ namespace TowerOffense{
     public class PlayerManager {
         private int _hp;
 
-        public int HP {get => _hp; }
+        public int Hp { get => _hp; }
 
         private PlayerManager() {
             _hp = 100; // Put this in a config file somewhere maybe
@@ -19,7 +19,7 @@ namespace TowerOffense{
             }
         }
 
-        public void SubtractHP(int change){
+        public void SubtractHp(int change){
             _hp -= change;
             if (_hp <= 0){
                 Die();

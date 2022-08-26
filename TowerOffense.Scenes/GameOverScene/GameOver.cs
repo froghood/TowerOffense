@@ -1,8 +1,6 @@
 namespace TowerOffense.Scenes.GameOver {
     public class GameOverScene : Scene {
-        public GameOverScene() : base() {
-            System.Console.WriteLine("you dead");
-        }
+        public GameOverScene() : base() {}
 
         public override void Initialize() {
             System.Console.WriteLine("GameOverScene Initialized");

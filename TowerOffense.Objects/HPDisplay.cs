@@ -4,17 +4,17 @@ using TowerOffense.Scenes;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TowerOffense.Objects {
-    public class HPDisplay : SceneWindow {
+    public class HpDisplay : SceneWindow {
         private PlayerManager _playerManager = PlayerManager.Instance;
         private SpriteFont _font;
         private string _text;
 
-        public HPDisplay(Scene scene, Point position, Point size) : base(scene, position, size) {
+        public HpDisplay(Scene scene, Point position, Point size) : base(scene, position, size) {
             _font = TOGame.Instance.Content.Load<SpriteFont>("Fonts/HpDisplay");
         }
 
         public override void Update(GameTime gameTime){
-            _text = _playerManager.HP.ToString();
+            _text = _playerManager.Hp.ToString();
         }
         public override void Render(GameTime gameTime){
             Vector2 textMiddlePoint = _font.MeasureString(_text) / 2;
