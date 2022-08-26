@@ -46,7 +46,7 @@ namespace TowerOffense.Objects.Base {
         public int BorderThickness { get => _borderThickness; }
         public Color BorderColor { get => _borderColor; set => _borderColor = value; }
         public Color FocusedBorderColor { get => _focusedBorderColor; set => _focusedBorderColor = value; }
-        public Point InnerWindowOffset { get => new Point(_borderThickness, _borderThickness + _titleBarHeight); }
+        public Vector2 InnerWindowOffset { get => new Vector2(_borderThickness, _borderThickness + _titleBarHeight); }
         public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
         public MouseState MouseState { get => _mouseState; }
         public bool IsMouseHovering { get => _isMouseHovering; }
