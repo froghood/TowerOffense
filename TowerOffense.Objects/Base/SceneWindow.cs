@@ -98,7 +98,7 @@ namespace TowerOffense.Objects.Base {
 
             _form.ClientSize = new System.Drawing.Size() {
                 Width = size.X + _borderThickness * 2,
-                Height = size.Y + _titleBarHeight - _borderThickness * 2
+                Height = size.Y + _titleBarHeight + _borderThickness * 2
             };
 
             _form.FormClosing += (sender, e) => {
