@@ -225,9 +225,9 @@ namespace TowerOffense.Objects.Base {
             base.Destroy();
         }
 
-        public void UpdateMouseState(MouseState mouseState, bool resetMouseOverlapping) {
+        public void UpdateMouseState(MouseState mouseState, bool resetMouseHovering) {
             _mouseState = mouseState;
-            if (resetMouseOverlapping) _isMouseHovering = false;
+            if (resetMouseHovering) _isMouseHovering = false;
         }
 
         public bool UpdateMouseHovering() {
