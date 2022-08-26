@@ -14,7 +14,7 @@ namespace TowerOffense.Scenes.Example.Objects {
         private double _time;
         private Random _random;
 
-        public Worm(Scene scene, Point position, Point size, int numSegments) : base(scene, position, size) {
+        public Worm(Scene scene, Point position, Point size, int numSegments, int titleBarHeight, int borderThickness) : base(scene, position, size, titleBarHeight, borderThickness) {
             _position = new Vector2(position.X, position.Y);
             _segments = new List<Segment>();
             _random = new Random();

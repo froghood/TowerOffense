@@ -34,7 +34,10 @@ namespace TowerOffense.Objects.Base {
         public bool Draggable { get => _draggable; set => _draggable = value; }
         public bool Closeable { get => _closeable; set => _closeable = value; }
         public int TitleBarHeight { get => _titleBarHeight; }
+        public Color TitleBarColor { get => _titleBarColor; set => _titleBarColor = value; }
         public int BorderThickness { get => _borderThickness; }
+        public Color BorderColor { get => _borderColor; set => _borderColor = value; }
+        public Color FocusedBorderColor { get => _focusedBorderColor; set => _focusedBorderColor = value; }
         public Point InnerWindowOffset { get => new Point(_borderThickness, _borderThickness + _titleBarHeight); }
         public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
         public MouseState MouseState { get => _mouseState; }
@@ -47,9 +50,9 @@ namespace TowerOffense.Objects.Base {
         private GameWindow _window;
         private Color _clearColor;
 
-        private int _titleBarHeight = 24;
+        private int _titleBarHeight;
         private Color _titleBarColor = Color.White;
-        private int _borderThickness = 1;
+        private int _borderThickness;
         private Color _borderColor = new Color(80, 80, 80);
         private Color _focusedBorderColor = new Color(180, 180, 180);
 
@@ -73,9 +76,8 @@ namespace TowerOffense.Objects.Base {
 
         private SwapChainRenderTarget _renderTarget;
 
-
-        public SceneWindow(Scene scene, Point position, Point size) : base(scene) {
-
+        public SceneWindow(Scene scene, Point position, Point size) : this(scene, position, size, 24, 1) { }
+        public SceneWindow(Scene scene, Point position, Point size, int titleBarHeight, int borderThickness) : base(scene) {
             _game = TOGame.Instance;
 
             _window = GameWindow.Create(_game, 0, 0);
@@ -90,6 +92,10 @@ namespace TowerOffense.Objects.Base {
             _form.TopMost = true;
             _form.Visible = true;
             Position = position;
+
+            _titleBarHeight = titleBarHeight;
+            _borderThickness = borderThickness;
+
             _form.ClientSize = new System.Drawing.Size() {
                 Width = size.X + _borderThickness * 2,
                 Height = size.Y + _titleBarHeight - _borderThickness * 2
@@ -175,14 +181,11 @@ namespace TowerOffense.Objects.Base {
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _form.ClientSize.Width, _borderThickness), borderColor);
 
             //close
-
-
             var closeColor = (_closeable, _isBeingDragged, _closeIsHovered, _closeIsPressed) switch {
                 (true, false, true, false) => new Color(0, 0, 0, 50),
                 (true, false, true, true) => new Color(0, 0, 0, 70),
                 _ => new Color(0, 0, 0, 0)
             };
-
 
             TOGame.SpriteBatch.Draw(_pixel, _closeBounds, closeColor);
             TOGame.SpriteBatch.Draw(_closeTexture, new Vector2() {
