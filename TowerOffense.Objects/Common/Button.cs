@@ -23,12 +23,12 @@ namespace TowerOffense.Objects.Common {
         }
 
         public override void Update(GameTime gameTime) {
-            var mouseState = Mouse.GetState(SceneWindow.Window);
 
-            _isHovering = (mouseState.X >= Bounds.Left && mouseState.X < Bounds.Right &&
-            mouseState.Y >= Bounds.Top && mouseState.Y < Bounds.Bottom);
+            _isHovering = (Window.IsMouseHovering &&
+            Window.MouseInnerPosition.X >= Bounds.Left && Window.MouseInnerPosition.X < Bounds.Right &&
+            Window.MouseInnerPosition.Y >= Bounds.Top && Window.MouseInnerPosition.Y < Bounds.Bottom);
 
-            if (_isHovering && mouseState.LeftButton == ButtonState.Pressed) {
+            if (_isHovering && Window.MouseState.LeftButton == ButtonState.Pressed) {
                 Clicked?.Invoke(this, EventArgs.Empty);
             }
 
@@ -37,7 +37,7 @@ namespace TowerOffense.Objects.Common {
 
         public override void Render(GameTime gameTime) {
 
-            TOGame.SpriteBatch.Draw(_isHovering ? HoverTexture : Texture, Bounds.Location.ToVector2(), Color.White);
+            Window.Draw(_isHovering ? HoverTexture : Texture, Bounds.Location.ToVector2(), Color.White);
 
             base.Render(gameTime);
         }

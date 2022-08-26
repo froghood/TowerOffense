@@ -10,11 +10,11 @@ namespace TowerOffense.Scenes.Example.Objects {
         }
 
         public override void Update(GameTime gameTime) {
-            //throw new System.NotImplementedException();
+            base.Update(gameTime);
         }
 
         public override void Render(GameTime gameTime) {
-            //throw new System.NotImplementedException();
+            base.Render(gameTime);
         }
 
 

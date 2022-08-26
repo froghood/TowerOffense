@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Objects.Base;
 using System.Reflection;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 
 namespace TowerOffense.Scenes {
 
@@ -14,6 +15,7 @@ namespace TowerOffense.Scenes {
 
         public void AddObject<T>(T sceneObject) where T : SceneObject {
             _sceneObjects.Add(sceneObject);
+
             if (typeof(T).IsSubclassOf(typeof(SceneWindow))) {
                 _sceneWindows.Add(sceneObject as SceneWindow);
             }
@@ -24,6 +26,21 @@ namespace TowerOffense.Scenes {
         }
 
         public void Update(GameTime gameTime) {
+
+            bool isOverlappingWindow = false;
+
+            var focusedWindow = _sceneWindows.FirstOrDefault(win => win.Form.Focused, null);
+            if (focusedWindow != null) {
+                _sceneWindows.Remove(focusedWindow);
+                _sceneWindows.Add(focusedWindow);
+            }
+
+            foreach (var windowObject in _sceneWindows.Where(obj => !obj.IsDestroyed).Reverse()) {
+                var mouseState = Mouse.GetState(windowObject.Window);
+                windowObject.UpdateMouseState(mouseState, true);
+                if (!isOverlappingWindow) isOverlappingWindow = windowObject.UpdateMouseHovering();
+            }
+
             foreach (var sceneObject in _sceneObjects.Where(obj => !obj.IsDestroyed)) {
                 sceneObject.Update(gameTime);
             }
@@ -33,7 +50,9 @@ namespace TowerOffense.Scenes {
         }
 
         public void Render(GameTime gameTime) {
+
             var graphicsDevice = TOGame.Instance.GraphicsDevice;
+
             foreach (var windowObject in _sceneWindows) {
                 graphicsDevice.SetRenderTarget(windowObject.RenderTarget);
                 graphicsDevice.Clear(windowObject.ClearColor);

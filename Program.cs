@@ -1,5 +1,6 @@
 ﻿using TowerOffense;
 using TowerOffense.Scenes.Example;
+using TowerOffense.Scenes.Test;
 using TowerOffense.Scenes.Title;
 
 public class Program {

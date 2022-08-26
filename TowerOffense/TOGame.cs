@@ -51,6 +51,8 @@ namespace TowerOffense {
 
         protected override void Initialize() {
 
+            IsFixedTimeStep = false;
+
             var form = (Form)Form.FromHandle(Window.Handle);
 
             // move it super far out of vision; without this you can still see it before it disappears
@@ -58,9 +60,7 @@ namespace TowerOffense {
             form.Location = new System.Drawing.Point(int.MaxValue, 0);
 
             // instantly hide the main window as soon we are able to
-            form.Activated += (sender, e) => {
-                form.Hide();
-            };
+            form.Activated += (sender, e) => form.Hide();
 
             base.Initialize();
         }
@@ -72,14 +72,14 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/Title");
             _assets.LoadTexture("Sprites/PlayButton");
             _assets.LoadTexture("Sprites/PlayButtonHover");
+            _assets.LoadTexture("Sprites/Close");
 
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime) {
-            while (_commandQueue.Count > 0) {
-                _commandQueue.Dequeue().Invoke();
-            }
+
+            while (_commandQueue.Count > 0) _commandQueue.Dequeue().Invoke();
 
             Scenes.CurrentScene.Update(gameTime);
 

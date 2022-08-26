@@ -10,7 +10,8 @@ namespace TowerOffense.Scenes.Example {
 
             var worm = new Worm(this, new Point(400, 400), new Point(120, 120), 10);
 
-            worm.Controllable = false;
+            worm.Draggable = false;
+            worm.Closeable = false;
 
             AddObject(worm);
             AddObjects(worm.GetSegments());

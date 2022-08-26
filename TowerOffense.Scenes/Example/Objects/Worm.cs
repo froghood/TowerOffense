@@ -19,7 +19,7 @@ namespace TowerOffense.Scenes.Example.Objects {
             _segments = new List<Segment>();
             _random = new Random();
             for (int i = 0; i < numSegments; i++) {
-                _segments.Add(new Segment(Scene, position, new Point(120, 120), this));
+                _segments.Add(new Segment(Scene, position, new Point(60 - 5 * i, 60 - 5 * i), this));
 
 
             }
@@ -45,9 +45,13 @@ namespace TowerOffense.Scenes.Example.Objects {
             };
 
             Position = _position.ToPoint();
+
+            base.Update(gameTime);
         }
 
-        public override void Render(GameTime gameTime) { }
+        public override void Render(GameTime gameTime) {
+            base.Render(gameTime);
+        }
 
         public IEnumerable<Segment> GetSegments() {
             return _segments;
