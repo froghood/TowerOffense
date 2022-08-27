@@ -16,7 +16,8 @@ namespace TowerOffense.Objects.Base {
         protected float _attackTimer;
         protected int _sellPrice;
 
-        protected List<(Enemy Enemy, float Distance)> _enemiesInRange = new();
+        protected List<Enemy> _enemiesInRange = new();
+        protected List<Enemy> _targetedEnemies = new();
 
         public Tower(Scene scene,
             EntityManager entityManager,
@@ -32,18 +33,15 @@ namespace TowerOffense.Objects.Base {
                 titleBarHeight,
                 borderThickness) {
 
-            TitleBarColor = new Color(180, 255, 215);
-            FocusedBorderColor = TitleBarColor;
-            BorderColor = new Color(90, 128, 108);
             //TODO: implement
         }
 
-        public void UpdateEnemiesInRange() {
-            _enemiesInRange = _entityManager.GetEnemies().Select(enemy => {
+        public List<Enemy> GetEnemiesInRange() {
+            return _entityManager.GetEnemies().Select(enemy => {
                 var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
                 var distance = MathF.Sqrt(manhattanDistance.X * manhattanDistance.X + manhattanDistance.Y * manhattanDistance.Y);
                 return (Enemy: enemy, Distance: distance);
-            }).Where(e => e.Distance <= _range).OrderBy(t => t.Distance).ToList();
+            }).Where(e => e.Distance <= _range).OrderBy(e => e.Distance).Select(e => e.Enemy).ToList();
         }
 
         public override void Update(GameTime gameTime) {
@@ -57,20 +55,18 @@ namespace TowerOffense.Objects.Base {
 
             var arrow = TOGame.Assets.Textures["Sprites/TowerTargetArrow"];
 
-            var activeEnemies = _enemiesInRange.Where(enemy => enemy.Enemy.EnemyState != EnemyState.Neutralized).ToList();
+            foreach (var enemy in _enemiesInRange) {
+                if (_targetedEnemies.Contains(enemy)) continue;
 
-            for (int i = activeEnemies.Count - 1; i >= 0; i--) {
-                var enemyData = activeEnemies[i];
-
-                var manhattanDistance = enemyData.Enemy.CenterPosition - this.CenterPosition;
+                var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
 
                 var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
                 var angleVector = new Vector2() {
                     X = MathF.Cos(angle),
                     Y = MathF.Sin(angle)
-                } * enemyData.Enemy.InnerSize.ToVector2() / 2f;
+                } * InnerSize.ToVector2() / 2f;
                 var origin = new Vector2() {
-                    X = 0f,
+                    X = arrow.Width,
                     Y = arrow.Height / 2f
                 };
 
@@ -78,14 +74,43 @@ namespace TowerOffense.Objects.Base {
                     texture: arrow,
                     position: InnerWindowCenterOffset + angleVector,
                     sourceRectangle: arrow.Bounds,
-                    color: i == 0 ? new Color(255, 200, 200) : Color.White,
+                    color: new Color(255, 255, 255, 100),
                     rotation: angle,
                     origin: origin,
-                    scale: i == 0 ? 1f : 0.5f,
+                    scale: 0.5f,
                     effects: SpriteEffects.None,
                     1f
                 );
             }
+
+            foreach (var enemy in _targetedEnemies) {
+
+                var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
+
+                var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
+                var angleVector = new Vector2() {
+                    X = MathF.Cos(angle),
+                    Y = MathF.Sin(angle)
+                } * InnerSize.ToVector2() / 2f;
+                var origin = new Vector2() {
+                    X = arrow.Width,
+                    Y = arrow.Height / 2f
+                };
+
+                TOGame.SpriteBatch.Draw(
+                    texture: arrow,
+                    position: InnerWindowCenterOffset + angleVector,
+                    sourceRectangle: arrow.Bounds,
+                    color: TitleBarColor,
+                    rotation: angle,
+                    origin: origin,
+                    scale: 1f,
+                    effects: SpriteEffects.None,
+                    1f
+                );
+            }
+
+
 
             base.Render(gameTime);
         }

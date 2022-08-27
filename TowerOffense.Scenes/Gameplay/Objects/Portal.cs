@@ -12,9 +12,9 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         base(scene, size: new Point(120, 120)) {
             Closeable = false;
             Draggable = false;
-            TitleBarColor = new Color(130, 100, 130);
+            TitleBarColor = new Color(100, 0, 128);
             FocusedBorderColor = TitleBarColor;
-            BorderColor = new Color(65, 50, 65);
+            BorderColor = new Color(50, 0, 64);
 
             var displayWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             var displayHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;

@@ -30,10 +30,11 @@ namespace TowerOffense.Objects.Common {
         public override void Update(GameTime gameTime) {
             if (!IsBeingDragged) {
                 Position = SmoothPosition.ToPoint();
+                base.Update(gameTime);
             } else {
+                base.Update(gameTime);
                 SmoothPosition = Position.ToVector2();
             }
-            base.Update(gameTime);
         }
     }
 }

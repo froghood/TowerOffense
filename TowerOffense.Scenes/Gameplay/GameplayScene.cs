@@ -21,8 +21,10 @@ namespace TowerOffense.Scenes.Gameplay {
             AddObject(_entityManager);
             AddObject(_waveManager);
 
-            AddObject(_entityManager.CreateTower<GravityTower>(new Point(0, 0)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Point(20, 20)));
+
+            AddObject(_entityManager.CreateTower<NuclearTower>(new Point(20, 20)));
+            AddObject(_entityManager.CreateTower<ElectroTower>(new Point(40, 40)));
+            AddObject(_entityManager.CreateTower<GravityTower>(new Point(60, 60)));
 
             _waveManager.OpenShop();
         }

@@ -6,8 +6,8 @@ using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
 
 namespace TowerOffense.Objects.Towers {
-    public class GravityTower : Tower {
-        public GravityTower(
+    public class ElectroTower : Tower {
+        public ElectroTower(
             Scene scene,
             EntityManager entityManager,
             Point? position = null) : base(
@@ -16,13 +16,13 @@ namespace TowerOffense.Objects.Towers {
             new Point(100, 100),
             position: position) {
 
-            TitleBarColor = new Color(225, 185, 255);
+            TitleBarColor = new Color(167, 236, 255);
             FocusedBorderColor = TitleBarColor;
-            BorderColor = new Color(118, 93, 128);
+            BorderColor = new Color(84, 118, 128);
 
-            _range = float.MaxValue;
+            _range = 480f;
             _attackSpeed = 0.5f;
-            _damage = 0.5f;
+            _damage = 2.5f;
             _sellPrice = 1;
         }
 

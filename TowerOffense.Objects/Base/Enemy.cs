@@ -36,9 +36,30 @@ namespace TowerOffense.Objects.Base {
 
             Draggable = false;
             Closeable = false;
-            TitleBarColor = new Color(200, 80, 80);
-            BorderColor = new Color(100, 40, 40);
+            TitleBarColor = new Color(255, 70, 120);
+            BorderColor = new Color(128, 35, 60);
             FocusedBorderColor = TitleBarColor;
+
+            StateChanged += (sender, state) => {
+                switch (state) {
+                    case EnemyState.Neutralized:
+                        Draggable = true;
+                        Closeable = true;
+                        TitleBarColor = new Color(255, 162, 187);
+                        BorderColor = new Color(128, 81, 94);
+                        FocusedBorderColor = TitleBarColor;
+                        break;
+                    default:
+                        Draggable = false;
+                        Closeable = false;
+                        TitleBarColor = new Color(255, 70, 120);
+                        BorderColor = new Color(128, 35, 60);
+                        FocusedBorderColor = TitleBarColor;
+                        break;
+                }
+            };
+
+
         }
 
         public override void Update(GameTime gameTime) {

@@ -35,26 +35,19 @@ namespace TowerOffense.Objects.Enemies {
             };
 
             StateChanged += (sender, state) => {
+
+                System.Console.WriteLine($"new: {state}, old: {EnemyState}");
+
                 switch (state) {
                     case EnemyState.Active:
                         _speed = 200;
-                        Health = MaxHealth;
-                        Draggable = false;
-                        Closeable = false;
-                        TitleBarColor = new Color(200, 80, 80);
-                        BorderColor = new Color(100, 40, 40);
-                        FocusedBorderColor = TitleBarColor;
+                        if (EnemyState == EnemyState.Neutralized) Health = MaxHealth;
                         break;
                     case EnemyState.Attacking:
                         _speed = 0;
                         break;
                     case EnemyState.Neutralized:
                         _speed = 0;
-                        Draggable = true;
-                        Closeable = true;
-                        TitleBarColor = new Color(200, 160, 160);
-                        BorderColor = new Color(100, 80, 80);
-                        FocusedBorderColor = TitleBarColor;
                         break;
                 }
             };
