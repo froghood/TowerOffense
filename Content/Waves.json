@@ -1,0 +1,10 @@
+{
+    "1": [
+        {
+            "Enemy": "TestEnemy",
+            "StartName": 5,
+            "Amount": 10,
+            "Interval": 1.8
+        }
+    ]
+}
