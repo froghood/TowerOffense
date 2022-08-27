@@ -6,13 +6,16 @@ using TowerOffense.Extensions;
 namespace TowerOffense.Scenes.Gameplay.Objects {
     public class SpawnGroup {
         public string Enemy { get; init; }
-        public double StartTime { get; init; }
+        public float StartTime { get; init; }
         public int Amount { get; init; }
-        public double Interval { get; init; }
+        public float Interval { get; init; }
 
-        private double _time = 0d;
+        public bool Finished { get => _finished; }
+
+        private float _time;
         private int _totalSpawned = 0;
         private Queue<string> _spawnQueue = new();
+        private bool _finished;
 
         public void Update(GameTime gameTime) {
             _time += gameTime.DeltaTime();
@@ -21,6 +24,8 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                 _time -= Interval;
                 _spawnQueue.Enqueue(Enemy);
             }
+
+            _finished = _totalSpawned >= Amount;
         }
 
         public IEnumerable<string> DequeueSpawns() {

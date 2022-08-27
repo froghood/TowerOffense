@@ -7,9 +7,11 @@ namespace TowerOffense.Scenes.Title {
         private TitleWindow _titleWindow;
 
         public TitleScene() : base() {
-            _titleWindow = new TitleWindow(this, new Point(800, 600), new Point(480, 270));
-            _titleWindow.ClearColor = Color.Blue;
-            _titleWindow.Closed += (_, _) => TOGame.Instance.Exit();
+            _titleWindow = new TitleWindow(this, new Point(480, 270), new Point(800, 600));
+            _titleWindow.Closed += (_, _) => {
+                System.Console.WriteLine("title closed");
+                TOGame.Instance.Exit();
+            };
         }
 
         public override void Initialize() {

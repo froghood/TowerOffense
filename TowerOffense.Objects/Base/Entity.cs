@@ -9,9 +9,20 @@ namespace TowerOffense.Objects.Common {
         private EntityManager _entityManager;
 
 
-        public Entity(Scene scene, EntityManager entityManager, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, position, size, titleBarHeight, borderThickness) {
+        public Entity(
+            Scene scene,
+            EntityManager entityManager,
+            Point size,
+            Point? position = null,
+            int titleBarHeight = 24,
+            int borderThickness = 1) : base(
+                scene,
+                size,
+                position,
+                titleBarHeight,
+                borderThickness) {
             _entityManager = entityManager;
-            SmoothPosition = position.ToVector2();
+            SmoothPosition = position.HasValue ? position.Value.ToVector2() : Vector2.Zero;
         }
 
         public override void Update(GameTime gameTime) {

@@ -14,7 +14,19 @@ namespace TowerOffense.Objects.Enemies {
         private float _speed = 200;
         private float _angle;
 
-        public TestEnemy(Scene scene, EntityManager entityManager, Point position) : base(scene, entityManager, position, new Point(60, 60)) {
+        public TestEnemy(
+            Scene scene,
+            EntityManager entityManager,
+            Point position,
+            bool fromPortal
+        ) : base(
+            scene,
+            entityManager,
+            new Point(60, 60),
+            position,
+            fromPortal
+        ) {
+
         }
 
         public override void Update(GameTime gameTime) {

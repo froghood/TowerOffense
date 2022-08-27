@@ -15,6 +15,16 @@ namespace TowerOffense.Objects.Base {
             set => _form.Location = new System.Drawing.Point(value.X, value.Y);
         }
 
+
+
+        public Point CenterPosition {
+            get => new Point(_form.Location.X, _form.Location.Y) + (InnerWindowOffset + InnerSize.ToVector2() / 2).ToPoint();
+            set {
+                var centerPosition = value - (InnerWindowOffset + InnerSize.ToVector2() / 2).ToPoint();
+                _form.Location = new System.Drawing.Point(centerPosition.X, centerPosition.Y);
+            }
+        }
+
         public Point InnerSize {
             get => new Point() {
                 X = _form.ClientSize.Width - _borderThickness * 2,
@@ -38,6 +48,7 @@ namespace TowerOffense.Objects.Base {
 
         public Color ClearColor { get; set; } = Color.Black;
         public SwapChainRenderTarget RenderTarget { get => _renderTarget; }
+        public bool Centered { get; set; }
         public bool IsBeingDragged { get => _isBeingDragged; }
         public bool Draggable { get; set; } = true;
         public bool Closeable { get; set; } = true;
@@ -47,6 +58,9 @@ namespace TowerOffense.Objects.Base {
         public Color BorderColor { get; set; } = Color.White;
         public Color FocusedBorderColor { get; set; } = new Color(180, 180, 180);
         public Vector2 InnerWindowOffset { get => new Vector2(_borderThickness, _borderThickness + _titleBarHeight); }
+        public Vector2 InnerWindowCenterOffset {
+            get => InnerWindowOffset + InnerSize.ToVector2() / 2;
+        }
         public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
         public MouseState MouseState { get => _mouseState; }
         public bool IsMouseHovering { get => _isMouseHovering; }
@@ -76,11 +90,20 @@ namespace TowerOffense.Objects.Base {
 
         private SwapChainRenderTarget _renderTarget;
 
-        public SceneWindow(Scene scene, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene) {
+        public SceneWindow(
+            Scene scene,
+            Point size,
+            Point? position = null,
+            int titleBarHeight = 24,
+            int borderThickness = 1) : base(scene) {
 
             var game = TOGame.Instance;
+
             _window = GameWindow.Create(game, 0, 0);
+
             _form = (Form)Form.FromHandle(_window.Handle);
+
+
 
             _form.FormBorderStyle = FormBorderStyle.None;
             _form.MaximizeBox = false;
@@ -89,15 +112,16 @@ namespace TowerOffense.Objects.Base {
             _form.ShowIcon = false;
             _form.ControlBox = false;
             _form.TopMost = true;
-            _form.Visible = true;
 
-            Position = position;
             _titleBarHeight = titleBarHeight;
             _borderThickness = borderThickness;
+
             _form.ClientSize = new System.Drawing.Size() {
                 Width = size.X + _borderThickness * 2,
                 Height = size.Y + _titleBarHeight + _borderThickness * 2
             };
+
+            Position = position.HasValue ? position.Value : Point.Zero;
 
             _form.FormClosing += (sender, e) => {
                 if (!Closeable) {
@@ -107,7 +131,6 @@ namespace TowerOffense.Objects.Base {
                 Close();
             };
 
-            ClearColor = Color.Black;
             CalculateCloseBounds();
 
             _closeTexture = TOGame.Assets.Textures["Sprites/Close"];
@@ -126,10 +149,7 @@ namespace TowerOffense.Objects.Base {
                 1,
                 RenderTargetUsage.PlatformContents,
                 PresentInterval.Default);
-
         }
-
-
 
         public override void Update(GameTime gameTime) {
 
@@ -193,7 +213,9 @@ namespace TowerOffense.Objects.Base {
             TOGame.SpriteBatch.Draw(_closeTexture, new Vector2() {
                 X = _closeBounds.X + _closeBounds.Width / 2 - _closeTexture.Width / 2,
                 Y = _closeBounds.Y + _closeBounds.Height / 2 - _closeTexture.Height / 2
-            }, Closeable ? Color.White : new Color(255, 255, 255, 70));
+            }, Closeable ? Color.White : new Color(255, 255, 255, 45));
+
+            _form.Visible = !_form.IsDisposed;
         }
 
         public void Draw(Texture2D texture, Vector2 position, Color color) {

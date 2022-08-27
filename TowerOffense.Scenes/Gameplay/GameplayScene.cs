@@ -7,6 +7,7 @@ namespace TowerOffense.Scenes.Gameplay {
 
         private EntityManager _entityManager;
         private WaveManager _waveManager;
+        private ShopWindow _shopWindow;
 
         public GameplayScene() {
             _entityManager = new EntityManager(this);
@@ -17,7 +18,8 @@ namespace TowerOffense.Scenes.Gameplay {
         public override void Initialize() {
             AddObject(_entityManager);
             AddObject(_waveManager);
-            _waveManager.NextWave();
+
+            _waveManager.OpenShop();
         }
 
         public override void Deactivate() {

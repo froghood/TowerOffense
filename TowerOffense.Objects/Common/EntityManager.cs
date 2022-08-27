@@ -9,6 +9,8 @@ using TowerOffense.Scenes;
 namespace TowerOffense.Objects.Common {
     public class EntityManager : SceneObject {
 
+        public int RemainingEnemies { get => _enemies.Count; }
+
         private List<Tower> _towers;
         private List<Enemy> _enemies;
 
