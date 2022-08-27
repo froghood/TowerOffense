@@ -12,8 +12,6 @@ namespace TowerOffense.Objects.Common {
         private List<Tower> _towers;
         private List<Enemy> _enemies;
 
-        private Queue<Type> _enemySpawns;
-
         public EntityManager(Scene scene) : base(scene) {
             _towers = new List<Tower>();
             _enemies = new List<Enemy>();
@@ -30,12 +28,6 @@ namespace TowerOffense.Objects.Common {
             var enemy = (Enemy)Activator.CreateInstance(type, enemyArgs.Concat(args).ToArray());
             _enemies.Add(enemy);
             return enemy;
-        }
-
-        public IEnumerable<Type> DequeueEnemySpawns() {
-            while (_enemySpawns.Count > 0) {
-                yield return _enemySpawns.Dequeue();
-            }
         }
 
         public override void Update(GameTime gameTime) {
