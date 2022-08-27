@@ -49,7 +49,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                     var portal = _portals[index];
 
                     var enemy = (spawn) switch {
-                        "TestEnemy" => _entityManager.CreateEnemy<TestEnemy>(portal.GetSpawnPosition(), true),
+                        "TestEnemy" => _entityManager.CreateEnemy<SpiderEnemy>(portal.GetSpawnPosition(), true),
                         _ => throw new Exception(),
                     };
 

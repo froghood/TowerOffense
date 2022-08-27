@@ -7,14 +7,14 @@ using TowerOffense.Scenes;
 using TowerOffense.Scenes.Gameplay.Objects;
 
 namespace TowerOffense.Objects.Enemies {
-    public class TestEnemy : Enemy {
+    public class SpiderEnemy : Enemy {
 
         private float _moveTime;
         private Vector2 _velocity;
         private float _speed = 200;
         private float _angle;
 
-        public TestEnemy(
+        public SpiderEnemy(
             Scene scene,
             EntityManager entityManager,
             Point position,

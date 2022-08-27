@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
@@ -20,10 +22,10 @@ namespace TowerOffense.Objects.Towers {
             FocusedBorderColor = TitleBarColor;
             BorderColor = new Color(118, 93, 128);
 
-            _range = float.MaxValue;
-            _attackSpeed = 0.5f;
-            _damage = 0.5f;
-            _sellPrice = 1;
+            Range = float.MaxValue;
+            AttackSpeed = 0.25f;
+            Damage = 0.5f;
+            SellPrice = 1;
         }
 
         public override void Update(GameTime gameTime) {
@@ -36,17 +38,44 @@ namespace TowerOffense.Objects.Towers {
             new List<Enemy> { first } :
             new List<Enemy>();
 
-            while (_attackTimer >= _attackSpeed) {
-                foreach (var enemy in _targetedEnemies) {
-                    enemy.Damage(_damage);
-                }
-                _attackTimer -= _attackSpeed;
+            switch (State) {
+                case TowerState.Idle:
+                    if (StateTime >= AttackSpeed && _targetedEnemies.Count > 0) {
+                        ChangeState(TowerState.Attacking);
+                        foreach (var enemy in _targetedEnemies) {
+
+                            enemy.Damage(Damage);
+                        }
+                    }
+                    break;
+                case TowerState.Attacking:
+                    if (StateTime >= 0.25f) {
+                        ChangeState(TowerState.Idle);
+                    }
+                    break;
             }
 
             base.Update(gameTime);
         }
 
         public override void Render(GameTime gameTime) {
+
+            Texture2D texture;
+
+            System.Console.WriteLine(StateTime);
+
+            switch (State) {
+                case TowerState.Idle:
+                    var frame = Convert.ToInt32(StateTime * 2f) % 2;
+                    texture = TOGame.Assets.Textures[$"Sprites/GravityTower{frame + 1}"];
+                    TOGame.SpriteBatch.Draw(texture, InnerWindowOffset, Color.White);
+                    break;
+                case TowerState.Attacking:
+                    texture = TOGame.Assets.Textures["Sprites/GravityTowerAttack"];
+                    TOGame.SpriteBatch.Draw(texture, InnerWindowOffset, Color.White);
+                    break;
+            }
+
             base.Render(gameTime);
         }
     }

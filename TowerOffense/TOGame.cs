@@ -75,6 +75,9 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/PlayButtonHover");
             _assets.LoadTexture("Sprites/Close");
             _assets.LoadTexture("Sprites/TowerTargetArrow");
+            _assets.LoadTexture("Sprites/GravityTower1");
+            _assets.LoadTexture("Sprites/GravityTower2");
+            _assets.LoadTexture("Sprites/GravityTowerAttack");
 
             base.LoadContent();
         }

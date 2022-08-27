@@ -20,10 +20,10 @@ namespace TowerOffense.Objects.Towers {
             FocusedBorderColor = TitleBarColor;
             BorderColor = new Color(84, 118, 128);
 
-            _range = 480f;
-            _attackSpeed = 0.5f;
-            _damage = 2.5f;
-            _sellPrice = 1;
+            Range = 480f;
+            AttackSpeed = 0.5f;
+            Damage = 2.5f;
+            SellPrice = 1;
         }
 
         public override void Update(GameTime gameTime) {
@@ -36,11 +36,21 @@ namespace TowerOffense.Objects.Towers {
             new List<Enemy> { first } :
             new List<Enemy>();
 
-            while (_attackTimer >= _attackSpeed) {
-                foreach (var enemy in _targetedEnemies) {
-                    enemy.Damage(_damage);
-                }
-                _attackTimer -= _attackSpeed;
+            switch (State) {
+                case TowerState.Idle:
+                    if (StateTime >= AttackSpeed && _targetedEnemies.Count > 0) {
+                        ChangeState(TowerState.Attacking);
+                        foreach (var enemy in _targetedEnemies) {
+
+                            enemy.Damage(Damage);
+                        }
+                    }
+                    break;
+                case TowerState.Attacking:
+                    if (StateTime >= 0.25f) {
+                        ChangeState(TowerState.Idle);
+                    }
+                    break;
             }
 
             base.Update(gameTime);

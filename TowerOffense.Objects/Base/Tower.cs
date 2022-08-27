@@ -10,14 +10,20 @@ using TowerOffense.Scenes;
 namespace TowerOffense.Objects.Base {
     public abstract class Tower : Entity {
 
-        protected float _range;
-        protected float _damage;
-        protected float _attackSpeed;
+        public TowerState State { get => _state; }
+        protected float StateTime { get => _stateTime; }
+
+        protected float Range { get; set; }
+        protected float Damage { get; set; }
+        protected float AttackSpeed { get; set; }
         protected float _attackTimer;
-        protected int _sellPrice;
+        protected int SellPrice { get; set; }
 
         protected List<Enemy> _enemiesInRange = new();
         protected List<Enemy> _targetedEnemies = new();
+
+        private float _stateTime;
+        private TowerState _state;
 
         public Tower(Scene scene,
             EntityManager entityManager,
@@ -38,15 +44,22 @@ namespace TowerOffense.Objects.Base {
 
         public List<Enemy> GetEnemiesInRange() {
             return _entityManager.GetEnemies().Select(enemy => {
-                var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
+                var manhattanDistance = (enemy.SmoothPosition + InnerWindowCenterOffset) - (this.SmoothPosition + InnerWindowCenterOffset);
                 var distance = MathF.Sqrt(manhattanDistance.X * manhattanDistance.X + manhattanDistance.Y * manhattanDistance.Y);
                 return (Enemy: enemy, Distance: distance);
-            }).Where(e => e.Distance <= _range).OrderBy(e => e.Distance).Select(e => e.Enemy).ToList();
+            }).Where(e => e.Distance <= Range).OrderBy(e => e.Distance).Select(e => e.Enemy).ToList();
+        }
+
+        public void ChangeState(TowerState towerState) {
+            StateChanged?.Invoke(this, towerState);
+            _state = towerState;
+            _stateTime = 0f;
         }
 
         public override void Update(GameTime gameTime) {
 
-            _attackTimer += gameTime.DeltaTime();
+            _stateTime += gameTime.DeltaTime();
+            //_attackTimer += gameTime.DeltaTime();
 
             base.Update(gameTime);
         }
@@ -58,15 +71,17 @@ namespace TowerOffense.Objects.Base {
             foreach (var enemy in _enemiesInRange) {
                 if (_targetedEnemies.Contains(enemy)) continue;
 
-                var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
+                var manhattanDistance = (enemy.SmoothPosition + enemy.InnerWindowCenterOffset) - (this.SmoothPosition + this.InnerWindowCenterOffset);
 
                 var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
                 var angleVector = new Vector2() {
                     X = MathF.Cos(angle),
                     Y = MathF.Sin(angle)
-                } * InnerSize.ToVector2() / 2f;
+                };
+                angleVector = angleVector / MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
+                angleVector *= InnerSize.ToVector2() / 2f;
                 var origin = new Vector2() {
-                    X = arrow.Width,
+                    X = arrow.Width + 2,
                     Y = arrow.Height / 2f
                 };
 
@@ -79,21 +94,23 @@ namespace TowerOffense.Objects.Base {
                     origin: origin,
                     scale: 0.5f,
                     effects: SpriteEffects.None,
-                    1f
+                    0f
                 );
             }
 
             foreach (var enemy in _targetedEnemies) {
 
-                var manhattanDistance = enemy.CenterPosition - this.CenterPosition;
+                var manhattanDistance = (enemy.SmoothPosition + enemy.InnerWindowCenterOffset) - (this.SmoothPosition + this.InnerWindowCenterOffset);
 
                 var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
                 var angleVector = new Vector2() {
                     X = MathF.Cos(angle),
                     Y = MathF.Sin(angle)
-                } * InnerSize.ToVector2() / 2f;
+                };
+                angleVector = angleVector / MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
+                angleVector *= InnerSize.ToVector2() / 2f;
                 var origin = new Vector2() {
-                    X = arrow.Width,
+                    X = arrow.Width + 2,
                     Y = arrow.Height / 2f
                 };
 
@@ -106,7 +123,7 @@ namespace TowerOffense.Objects.Base {
                     origin: origin,
                     scale: 1f,
                     effects: SpriteEffects.None,
-                    1f
+                    0f
                 );
             }
 
@@ -114,5 +131,12 @@ namespace TowerOffense.Objects.Base {
 
             base.Render(gameTime);
         }
+
+        protected event EventHandler<TowerState> StateChanged;
+    }
+
+    public enum TowerState {
+        Idle,
+        Attacking
     }
 }

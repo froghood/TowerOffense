@@ -6,7 +6,8 @@ namespace TowerOffense.Objects.Common {
     public class Entity : SceneWindow {
 
 
-        protected Vector2 SmoothPosition { get; set; }
+        public Vector2 SmoothPosition { get; protected set; }
+        protected Vector2 OffsetPosition { get; set; }
 
 
         protected readonly EntityManager _entityManager;
@@ -29,7 +30,7 @@ namespace TowerOffense.Objects.Common {
 
         public override void Update(GameTime gameTime) {
             if (!IsBeingDragged) {
-                Position = SmoothPosition.ToPoint();
+                Position = SmoothPosition.ToPoint() + OffsetPosition.ToPoint();
                 base.Update(gameTime);
             } else {
                 base.Update(gameTime);

@@ -14,6 +14,8 @@ namespace TowerOffense.Objects.Base {
         protected float Health { get; set; }
 
         private float _stateTime;
+        private float _shakeTime;
+        private float _shakeAmount;
         private EnemyState _enemyState;
 
         public Enemy(
@@ -33,6 +35,11 @@ namespace TowerOffense.Objects.Base {
             borderThickness) {
 
             if (fromPortal) SmoothPosition = Position.ToVector2() - InnerWindowCenterOffset;
+
+            Damaged += (sender, amount) => {
+                _shakeTime = 0.333f;
+                _shakeAmount = (10f + amount * 2f) * 0.667f;
+            };
 
             Draggable = false;
             Closeable = false;
@@ -64,6 +71,12 @@ namespace TowerOffense.Objects.Base {
 
         public override void Update(GameTime gameTime) {
             _stateTime += gameTime.DeltaTime();
+            _shakeTime = MathF.Max(0f, _shakeTime - gameTime.DeltaTime());
+
+            OffsetPosition = new Vector2() {
+                X = MathF.Cos(_stateTime * MathF.Tau * 10) * (_shakeAmount * _shakeTime * 2),
+                Y = 0f
+            };
 
             base.Update(gameTime);
         }
@@ -77,7 +90,7 @@ namespace TowerOffense.Objects.Base {
         }
 
         public void ChangeState(EnemyState enemyState) {
-            StateChanged.Invoke(this, enemyState);
+            StateChanged?.Invoke(this, enemyState);
             _enemyState = enemyState;
             _stateTime = 0f;
         }

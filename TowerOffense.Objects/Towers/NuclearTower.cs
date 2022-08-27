@@ -1,5 +1,7 @@
+using System;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using TowerOffense.Extensions;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
@@ -19,10 +21,10 @@ namespace TowerOffense.Objects.Towers {
             FocusedBorderColor = TitleBarColor;
             BorderColor = new Color(80, 128, 75);
 
-            _range = 240f;
-            _attackSpeed = 0.2f;
-            _damage = 0.3f;
-            _sellPrice = 1;
+            Range = 240f;
+            AttackSpeed = 0.25f;
+            Damage = 0.333f;
+            SellPrice = 1;
         }
 
         public override void Update(GameTime gameTime) {
@@ -30,12 +32,23 @@ namespace TowerOffense.Objects.Towers {
             _enemiesInRange = GetEnemiesInRange();
             _targetedEnemies = _enemiesInRange.Where(e => e.EnemyState != EnemyState.Neutralized).ToList();
 
-            while (_attackTimer >= _attackSpeed) {
-                foreach (var enemy in _targetedEnemies) {
-                    enemy.Damage(_damage);
-                }
-                _attackTimer -= _attackSpeed;
+            if (State == TowerState.Idle && _targetedEnemies.Count > 0) ChangeState(TowerState.Attacking);
+            else if (State == TowerState.Attacking && _targetedEnemies.Count == 0) ChangeState(TowerState.Idle);
+
+            switch (State) {
+                case TowerState.Idle:
+                    break;
+                case TowerState.Attacking:
+                    if (_attackTimer >= AttackSpeed) {
+                        _attackTimer -= AttackSpeed;
+                        foreach (var enemy in _targetedEnemies) {
+                            enemy.Damage(Damage);
+                        }
+                    }
+                    break;
             }
+
+            _attackTimer = MathF.Min(AttackSpeed, _attackTimer + gameTime.DeltaTime());
 
             base.Update(gameTime);
         }
