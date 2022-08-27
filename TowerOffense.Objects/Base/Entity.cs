@@ -5,9 +5,11 @@ using TowerOffense.Scenes;
 namespace TowerOffense.Objects.Common {
     public class Entity : SceneWindow {
 
-        public Vector2 SmoothPosition { get; set; }
-        private EntityManager _entityManager;
 
+        protected Vector2 SmoothPosition { get; set; }
+
+
+        protected readonly EntityManager _entityManager;
 
         public Entity(
             Scene scene,
@@ -26,7 +28,11 @@ namespace TowerOffense.Objects.Common {
         }
 
         public override void Update(GameTime gameTime) {
-            Position = SmoothPosition.ToPoint();
+            if (!IsBeingDragged) {
+                Position = SmoothPosition.ToPoint();
+            } else {
+                SmoothPosition = Position.ToVector2();
+            }
             base.Update(gameTime);
         }
     }

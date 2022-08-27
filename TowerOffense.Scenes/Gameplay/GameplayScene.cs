@@ -1,6 +1,8 @@
 using Microsoft.Xna.Framework;
 using TowerOffense.Objects.Common;
+using TowerOffense.Objects.Towers;
 using TowerOffense.Scenes.Gameplay.Objects;
+using TowerOffense.Scenes.Gameplay.Objects.Shop;
 
 namespace TowerOffense.Scenes.Gameplay {
     public class GameplayScene : Scene {
@@ -18,6 +20,9 @@ namespace TowerOffense.Scenes.Gameplay {
         public override void Initialize() {
             AddObject(_entityManager);
             AddObject(_waveManager);
+
+            AddObject(_entityManager.CreateTower<GravityTower>(new Point(0, 0)));
+            AddObject(_entityManager.CreateTower<GravityTower>(new Point(20, 20)));
 
             _waveManager.OpenShop();
         }

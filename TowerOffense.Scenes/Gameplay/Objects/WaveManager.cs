@@ -7,7 +7,9 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
-using TowerOffense.Scenes.GamePlay.Objects;
+using TowerOffense.Scenes.Gameplay.Objects.Shop;
+using TowerOffense.Scenes.Gameplay.Objects;
+using TowerOffense.Objects.Enemies;
 
 namespace TowerOffense.Scenes.Gameplay.Objects {
     public class WaveManager : SceneWindow {
@@ -42,9 +44,16 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                 spawnGroup.Update(gameTime);
                 foreach (var spawn in spawnGroup.DequeueSpawns()) {
 
-                    var portal = _portals[_random.Next(_portals.Count)];
+                    int index = _random.Next(_portals.Count);
+                    System.Console.WriteLine(index);
+                    var portal = _portals[index];
 
-                    Scene.AddObject(_entityManager.CreateEnemyFromString(spawn, portal.GetSpawnPosition(), true));
+                    var enemy = (spawn) switch {
+                        "TestEnemy" => _entityManager.CreateEnemy<TestEnemy>(portal.GetSpawnPosition(), true),
+                        _ => throw new Exception(),
+                    };
+
+                    Scene.AddObject(enemy);
                 }
             }
 

@@ -124,6 +124,7 @@ namespace TowerOffense.Objects.Base {
             Position = position.HasValue ? position.Value : Point.Zero;
 
             _form.FormClosing += (sender, e) => {
+                System.Console.WriteLine("closing");
                 if (!Closeable) {
                     e.Cancel = true;
                     return;

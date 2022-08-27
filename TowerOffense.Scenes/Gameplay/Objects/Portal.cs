@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Objects.Base;
 
-namespace TowerOffense.Scenes.GamePlay.Objects {
+namespace TowerOffense.Scenes.Gameplay.Objects {
     public class Portal : SceneWindow {
 
 

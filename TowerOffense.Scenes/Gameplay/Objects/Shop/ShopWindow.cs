@@ -2,7 +2,7 @@ using Microsoft.Xna.Framework;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 
-namespace TowerOffense.Scenes.Gameplay.Objects {
+namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
     public class ShopWindow : SceneWindow {
 
         private EntityManager _entityManager;
@@ -13,7 +13,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             _entityManager = entityManager;
             _waveManager = waveManager;
 
-            ClearColor = new Color(50, 50, 50);
+            ClearColor = new Color(30, 30, 30);
         }
     }
 }

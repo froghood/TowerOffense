@@ -19,17 +19,24 @@ namespace TowerOffense.Objects.Common {
             _enemies = new List<Enemy>();
         }
 
-        public Enemy CreateEnemyFromString(string enemyTypeString, params object[] args) {
-            Type type = (enemyTypeString) switch {
-                "TestEnemy" => typeof(TestEnemy),
-                // TODO: fill with more enemies
-                _ => null
-            };
-
-            object[] enemyArgs = { Scene, this };
-            var enemy = (Enemy)Activator.CreateInstance(type, enemyArgs.Concat(args).ToArray());
+        public Enemy CreateEnemy<T>(params object[] e) where T : Enemy {
+            System.Console.WriteLine(e.Length);
+            var args = new object[] { Scene, this }.Concat(e).ToArray();
+            System.Console.WriteLine(args.Length);
+            var enemy = (T)Activator.CreateInstance(typeof(T), args);
             _enemies.Add(enemy);
             return enemy;
+        }
+
+        public Tower CreateTower<T>(params object[] e) where T : Tower {
+            var args = new object[] { Scene, this }.Concat(e).ToArray();
+            var tower = (T)Activator.CreateInstance(typeof(T), args);
+            _towers.Add(tower);
+            return tower;
+        }
+
+        public IEnumerable<Enemy> GetEnemies() {
+            return _enemies.Where(enemy => !enemy.IsDestroyed);
         }
 
         public override void Update(GameTime gameTime) {

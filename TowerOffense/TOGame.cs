@@ -63,13 +63,6 @@ namespace TowerOffense {
                 if (form.Visible) form.Visible = false;
             };
 
-            // move it super far out of vision; without this you can still see it before it disappears
-            // kinda hacky but i cant find a better way to do it
-            //form.Location = new System.Drawing.Point(int.MaxValue, 0);
-
-            // instantly hide the main window as soon we are able to
-            //form.Activated += (sender, e) => form.Hide();
-
             base.Initialize();
         }
 
@@ -81,6 +74,7 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/PlayButton");
             _assets.LoadTexture("Sprites/PlayButtonHover");
             _assets.LoadTexture("Sprites/Close");
+            _assets.LoadTexture("Sprites/TowerTargetArrow");
 
             base.LoadContent();
         }
