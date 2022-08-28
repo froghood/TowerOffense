@@ -33,7 +33,9 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
 
         public WaveManager(Scene scene, EntityManager entityManager, string wavesJsonPath)
-        : base(scene, new Point(160, 40), new Vector2(24, 24)) {
+        : base(scene, new Point(160, 40), new Vector2(TOGame.DisplaySize.X / 2 - 160, 24)) {
+
+            Position -= Vector2.UnitX * Size.X;
 
             ClearColor = new Color(104, 66, 74);
             TitleBarColor = new Color(186, 120, 93);
@@ -88,7 +90,19 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             string text = $"wave {_wave}";
             var fontSize = spriteFont.MeasureString(text);
 
-            TOGame.SpriteBatch.DrawString(spriteFont, text, InnerWindowCenterOffset - fontSize / 2f, new Color(40, 25, 43));
+            TOGame.SpriteBatch.DrawString(spriteFont,
+                text,
+                InnerWindowCenterOffset,
+                new Color(40, 25, 43),
+                0f,
+                fontSize / 2f,
+                0.25f,
+                SpriteEffects.None,
+                0f);
+
+            // TOGame.SpriteBatch.DrawString(
+            //     spriteFont,
+            //     text, InnerWindowCenterOffset - fontSize / 2f, new Color(40, 25, 43));
 
 
 

@@ -9,9 +9,10 @@ using TowerOffense.Scenes.Gameplay.Objects;
 
 namespace TowerOffense.Objects.Enemies {
     public class Spider : Enemy {
-        private const int ActiveStateTime = 10;
-        private const int AttackingStateTime = 2;
-        private const int NeutralizedStateTime = 10;
+        private const float ActiveDuration = 10f;
+        private const float AttackingDuration = 1.25f;
+        private const float NeutralizedDuration = 8f;
+        private const int DamageAmount = 2;
         private float _moveTime;
         private Vector2 _velocity;
         private float _speed = 300;
@@ -40,7 +41,7 @@ namespace TowerOffense.Objects.Enemies {
 
             Damaged += (sender, amount) => {
                 if (Health - amount <= 0f) {
-                    ChangeState(EnemyState.Neutralized, 5f);
+                    ChangeState(EnemyState.Neutralized, NeutralizedDuration);
                 }
             };
 
@@ -50,7 +51,7 @@ namespace TowerOffense.Objects.Enemies {
                     case EnemyState.Active:
                         _speed = 200;
                         if (State == EnemyState.Neutralized) Health = MaxHealth;
-                        if (State == EnemyState.Attacking) TOGame.PlayerManager.Damage(1);
+                        if (State == EnemyState.Attacking) TOGame.PlayerManager.Damage(DamageAmount);
                         break;
                     case EnemyState.Attacking:
                         _speed = 0;
@@ -71,18 +72,18 @@ namespace TowerOffense.Objects.Enemies {
 
             switch (State) {
                 case EnemyState.Active:
-                    if (StateTime >= 10f) {
-                        ChangeState(EnemyState.Attacking, 2f);
+                    if (StateTime >= ActiveDuration) {
+                        ChangeState(EnemyState.Attacking, AttackingDuration);
                     }
                     break;
                 case EnemyState.Attacking:
-                    if (StateTime >= 1.25f) {
-                        ChangeState(EnemyState.Active, 10f);
+                    if (StateTime >= AttackingDuration) {
+                        ChangeState(EnemyState.Active, ActiveDuration);
                     }
                     break;
                 case EnemyState.Neutralized:
-                    if (StateTime >= 5f) {
-                        ChangeState(EnemyState.Active, 10f);
+                    if (StateTime >= NeutralizedDuration) {
+                        ChangeState(EnemyState.Active, ActiveDuration);
                     }
                     break;
             }

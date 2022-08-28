@@ -5,7 +5,7 @@ using TowerOffense.Scenes.GameOver;
 namespace TowerOffense {
     public class PlayerManager {
         public int Health { get; private set; }
-        public int Money { get; set; }
+        public int Money { get; private set; }
 
         private bool _dead;
 
@@ -24,6 +24,10 @@ namespace TowerOffense {
             Health = startingHealth;
             System.Console.WriteLine(Health);
             Money = startingMoney;
+        }
+
+        internal void Reward(int rewardAmount) {
+            Money += rewardAmount;
         }
     }
 }

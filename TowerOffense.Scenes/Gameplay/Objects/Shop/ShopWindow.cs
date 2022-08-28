@@ -13,6 +13,8 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
             _entityManager = entityManager;
             _waveManager = waveManager;
 
+
+
             ClearColor = new Color(30, 30, 30);
         }
     }

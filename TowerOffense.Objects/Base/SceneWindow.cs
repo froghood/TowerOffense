@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -60,9 +61,19 @@ namespace TowerOffense.Objects.Base {
         public Vector2 InnerWindowCenterOffset {
             get => InnerWindowOffset + InnerSize.ToVector2() / 2;
         }
-        public Point MouseInnerPosition { get => new Point(_mouseState.X - _borderThickness, _mouseState.Y - _titleBarHeight - _borderThickness); }
-        public MouseState MouseState { get => _mouseState; }
-        public bool IsMouseHovering { get => _isMouseHovering; }
+        public bool Focused { get => _form.Focused; }
+
+        public Point MouseInnerPosition { get => MouseState.Position - InnerWindowOffset.ToPoint(); }
+        public MouseState MouseState { get => Mouse.GetState(_window); }
+        public bool MouseOverlapping { get => (MouseState.X >= 0 && MouseState.X < Size.X && MouseState.Y >= 0 && MouseState.Y < Size.Y); }
+        public bool MouseHovering {
+            get {
+                var lastOverlapping = Scene.SceneWindows.Where(win => win.MouseOverlapping).LastOrDefault();
+                return (lastOverlapping != null && lastOverlapping == this);
+            }
+        }
+
+        protected Texture2D Pixel { get => _pixel; }
 
         public event EventHandler Closed;
 
@@ -74,8 +85,7 @@ namespace TowerOffense.Objects.Base {
         private int _titleBarHeight;
         private int _borderThickness;
 
-        private MouseState _mouseState;
-        private bool _isMouseHovering;
+        private bool _mouseHovering;
 
         private bool _isBeingDragged;
         private Point _dragOffset;
@@ -155,17 +165,19 @@ namespace TowerOffense.Objects.Base {
 
         public override void Update(GameTime gameTime) {
 
+            _mouseHovering = false;
+
             // window dragging & close button
             if (!Draggable) _isBeingDragged = false;
 
-            _closeIsHovered = (_isMouseHovering &&
-                _mouseState.X >= _closeBounds.Left - 1 && _mouseState.X < _closeBounds.Right + 1 &&
-                _mouseState.Y >= _closeBounds.Top - 1 && _mouseState.Y < _closeBounds.Bottom);
+            _closeIsHovered = (MouseHovering &&
+                MouseState.X >= _closeBounds.Left - 1 && MouseState.X < _closeBounds.Right + 1 &&
+                MouseState.Y >= _closeBounds.Top - 1 && MouseState.Y < _closeBounds.Bottom);
 
-            switch (_mouseState.LeftButton) {
+            switch (MouseState.LeftButton) {
                 case ButtonState.Pressed:
                     // ensures only the first frame of ButtonState.Pressed gets through
-                    if (!_form.Focused || _mousePressedFlag) break;
+                    if (!Focused || _mousePressedFlag) break;
 
                     // true if the close button is being hovered but is not already being pressed or the window is being dragged
                     if (!_closeIsPressed && !_isBeingDragged && _closeIsHovered) _closeIsPressed = true;
@@ -173,10 +185,10 @@ namespace TowerOffense.Objects.Base {
                     if (_closeIsPressed) break; // dont drag if close is being pressed
 
                     if (!_isBeingDragged && // check if the mouse is within the bounds of the draggable area
-                    _mouseState.X >= 0 && _mouseState.X < _form.ClientSize.Width &&
-                    _mouseState.Y >= 0 && _mouseState.Y < _titleBarHeight + _borderThickness) {
+                    MouseState.X >= 0 && MouseState.X < _form.ClientSize.Width &&
+                    MouseState.Y >= 0 && MouseState.Y < _titleBarHeight + _borderThickness) {
                         _isBeingDragged = true;
-                        _dragOffset = new Point(_mouseState.X, _mouseState.Y);
+                        _dragOffset = new Point(MouseState.X, MouseState.Y);
                     }
                     _mousePressedFlag = true;
                     break;
@@ -210,7 +222,7 @@ namespace TowerOffense.Objects.Base {
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_borderThickness, _borderThickness, _form.ClientSize.Width - _borderThickness, _titleBarHeight), TitleBarColor);
 
             //border
-            var borderColor = _form.Focused ? FocusedBorderColor : BorderColor;
+            var borderColor = Focused ? FocusedBorderColor : BorderColor;
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, 0, _borderThickness, _form.ClientSize.Height), borderColor);
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(_form.ClientSize.Width - _borderThickness, 0, _borderThickness, _form.ClientSize.Height), borderColor);
             TOGame.SpriteBatch.Draw(_pixel, new Rectangle(0, _form.ClientSize.Height - _borderThickness, _form.ClientSize.Width, _borderThickness), borderColor);
@@ -258,17 +270,6 @@ namespace TowerOffense.Objects.Base {
             _form.Dispose();
             _renderTarget.Dispose();
             base.Destroy();
-        }
-
-        public void UpdateMouseState(MouseState mouseState, bool resetMouseHovering) {
-            _mouseState = mouseState;
-            if (resetMouseHovering) _isMouseHovering = false;
-        }
-
-        public bool UpdateMouseHovering() {
-            _isMouseHovering = (_mouseState.X >= 0 && _mouseState.X < _form.ClientSize.Width &&
-            _mouseState.Y >= 0 && _mouseState.Y < _form.ClientSize.Height);
-            return _isMouseHovering;
         }
 
         private void CalculateCloseBounds() {

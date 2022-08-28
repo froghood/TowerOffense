@@ -17,7 +17,7 @@ namespace TowerOffense.Objects.Base {
         protected float Damage { get; set; }
         protected float AttackSpeed { get; set; }
         protected float _attackTimer;
-        protected int SellPrice { get; set; }
+        protected int SellPrice { get; set; } = 1;
 
         protected List<Enemy> _enemiesInRange = new();
         protected List<Enemy> _targetedEnemies = new();
@@ -37,7 +37,12 @@ namespace TowerOffense.Objects.Base {
             size,
             position,
             titleBarHeight,
-            borderThickness) { }
+            borderThickness) {
+
+            Closed += (_, _) => {
+                TOGame.PlayerManager.Reward(SellPrice);
+            };
+        }
 
         public List<Enemy> GetEnemiesInRange() {
             return _entityManager.GetEnemies().Select(enemy => {

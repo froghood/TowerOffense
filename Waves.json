@@ -4,20 +4,20 @@
         "SpawnGroups": [
             {
                 "Enemy": "Spider",
-                "StartTime": 3,
+                "StartTime": 1.5,
                 "Amount": 3,
-                "Interval": 1.2
+                "Interval": 2
             }
         ]
     },
     "2": {
-        "Portals": 3,
+        "Portals": 1,
         "SpawnGroups": [
             {
                 "Enemy": "Spider",
-                "StartTime": 3,
-                "Amount": 6,
-                "Interval": 0.6
+                "StartTime": 1.5,
+                "Amount": 7,
+                "Interval": 1.1
             }
         ]
     },

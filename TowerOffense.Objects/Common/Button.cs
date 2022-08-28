@@ -7,12 +7,13 @@ using TowerOffense.Objects.Base;
 namespace TowerOffense.Objects.Common {
     public class Button : WindowObject {
 
-        public bool IsHovering { get => _isHovering; }
+        public bool Hovering { get => _isHovering; }
         public Rectangle Bounds { get; set; }
         public Texture2D Texture { get; set; }
         public Texture2D HoverTexture { get; set; }
 
         private bool _isHovering;
+        private ButtonState _previousMouseButtonState = ButtonState.Released;
 
         public event EventHandler Clicked;
 
@@ -24,11 +25,11 @@ namespace TowerOffense.Objects.Common {
 
         public override void Update(GameTime gameTime) {
 
-            _isHovering = (SceneWindow.IsMouseHovering &&
+            _isHovering = (SceneWindow.MouseHovering &&
             SceneWindow.MouseInnerPosition.X >= Bounds.Left && SceneWindow.MouseInnerPosition.X < Bounds.Right &&
             SceneWindow.MouseInnerPosition.Y >= Bounds.Top && SceneWindow.MouseInnerPosition.Y < Bounds.Bottom);
 
-            if (_isHovering && SceneWindow.MouseState.LeftButton == ButtonState.Pressed) {
+            if (_isHovering && SceneWindow.MouseState.LeftButton == ButtonState.Pressed && _previousMouseButtonState == ButtonState.Released) {
                 Clicked?.Invoke(this, EventArgs.Empty);
             }
 

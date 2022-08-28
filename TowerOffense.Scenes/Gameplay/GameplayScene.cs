@@ -28,16 +28,12 @@ namespace TowerOffense.Scenes.Gameplay {
             AddObject(_entityManager);
             AddObject(_waveManager);
 
+            AddObject(new HealthWindow(this));
+            AddObject(new MoneyWindow(this));
 
             AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(20, 20)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(40, 40)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(60, 60)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(80, 20)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(100, 40)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(120, 60)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(140, 20)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(160, 40)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(180, 60)));
+            AddObject(_entityManager.CreateTower<ElectroTower>(new Vector2(40, 40)));
+            AddObject(_entityManager.CreateTower<NuclearTower>(new Vector2(60, 60)));
 
             _waveManager.OpenShop();
         }

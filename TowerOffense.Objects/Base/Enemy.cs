@@ -14,6 +14,7 @@ namespace TowerOffense.Objects.Base {
 
         protected float MaxHealth { get; set; }
         protected float Health { get; set; }
+        protected int RewardAmount { get; set; } = 1;
 
         private float _stateTime;
         private float _stateDuration;
@@ -44,6 +45,10 @@ namespace TowerOffense.Objects.Base {
             Damaged += (sender, amount) => {
                 _shakeTime = 0.333f;
                 _shakeAmount = (10f + amount * 2f) * 0.667f;
+            };
+
+            Closed += (_, _) => {
+                TOGame.PlayerManager.Reward(RewardAmount);
             };
 
             Draggable = false;
@@ -101,18 +106,24 @@ namespace TowerOffense.Objects.Base {
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
             if (State != EnemyState.Attacking) {
-                TOGame.SpriteBatch.DrawString(
-                    spriteFont,
-                    text,
-                    (State == EnemyState.Active) ?
-                        InnerWindowOffset + Vector2.UnitX * 2 :
-                        InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness),
-                    Color.White,
-                    0f,
-                    Vector2.One,
-                    1f,
-                    SpriteEffects.None,
-                    0f);
+                TOGame.SpriteBatch.Draw(Pixel,
+                new Rectangle(
+                    InnerWindowOffset.ToPoint(),
+                    new Point((int)((float)InnerSize.X * (_stateTime / _stateDuration)), 2)),
+                Color.White);
+
+                // TOGame.SpriteBatch.DrawString(
+                //     spriteFont,
+                //     text,
+                //     (State == EnemyState.Active) ?
+                //         InnerWindowOffset + Vector2.UnitX * 2 - Offset :
+                //         InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness) - Offset,
+                //     Color.White,
+                //     0f,
+                //     Vector2.One,
+                //     1f,
+                //     SpriteEffects.None,
+                //     0f);
             } else {
                 var colorMod = (MathF.Sin(StateTime * 28f) + 1f) / 3f;
                 TitleBarColor = new Color(1f, colorMod, colorMod);
@@ -143,7 +154,6 @@ namespace TowerOffense.Objects.Base {
             angleVector *= InnerSize.ToVector2() / 2f;
 
             _particles.Add(new Particle(this, InnerSize.ToVector2() / 2f + angleVector * 0.9f, tower.TitleBarColor));
-
 
             Health -= amount;
         }
