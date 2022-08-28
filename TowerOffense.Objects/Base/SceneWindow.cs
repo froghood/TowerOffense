@@ -76,8 +76,6 @@ namespace TowerOffense.Objects.Base {
         private Form _form;
         private GameWindow _window;
 
-        private float _position;
-
         private int _titleBarHeight;
         private int _borderThickness;
 
@@ -110,8 +108,6 @@ namespace TowerOffense.Objects.Base {
             _window = GameWindow.Create(game, 0, 0);
 
             _form = (Form)Form.FromHandle(_window.Handle);
-
-
 
             _form.FormBorderStyle = FormBorderStyle.None;
             _form.MaximizeBox = false;
@@ -164,7 +160,6 @@ namespace TowerOffense.Objects.Base {
 
             // window dragging & close button
             if (!Draggable) _isBeingDragged = false;
-            //if (_isBeingDragged) _form.Location = new System.Drawing.Point(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
 
             _closeIsHovered = (_isMouseHovering &&
                 _mouseState.X >= _closeBounds.Left - 1 && _mouseState.X < _closeBounds.Right + 1 &&
@@ -202,17 +197,14 @@ namespace TowerOffense.Objects.Base {
 
 
             Position = new Vector2() {
-                X = MathF.Max(0f, MathF.Min(Position.X, 1920f - Size.X)),
-                Y = MathF.Max(0f, MathF.Min(Position.Y, 1080f - Size.Y))
+                X = Math.Clamp(Position.X, 0, 1920f - Size.X),
+                Y = Math.Clamp(Position.Y, 0, 1080f - Size.Y)
             };
 
             _form.Location = new System.Drawing.Point() {
-                X = (int)MathF.Min(Position.X + Offset.X, 1920f - Size.X),
-                Y = (int)MathF.Min(Position.Y + Offset.Y, 1080f - Size.Y)
+                X = (int)Math.Clamp(Position.X + Offset.X, 0, 1920 - Size.X),
+                Y = (int)Math.Clamp(Position.Y + Offset.Y, 0, 1080 - Size.Y)
             };
-
-
-
         }
 
         public virtual void Render(GameTime gameTime) {

@@ -61,6 +61,13 @@ namespace TowerOffense.Objects.Base {
                         BorderColor = new Color(128, 81, 94);
                         FocusedBorderColor = TitleBarColor;
                         break;
+                    case EnemyState.Attacking:
+                        Draggable = false;
+                        Closeable = false;
+                        TitleBarColor = new Color(255, 0, 60);
+                        BorderColor = new Color(128, 0, 30);
+                        FocusedBorderColor = TitleBarColor;
+                        break;
                     default:
                         Draggable = false;
                         Closeable = false;
@@ -96,19 +103,21 @@ namespace TowerOffense.Objects.Base {
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
+            if (State != EnemyState.Attacking) {
+                TOGame.SpriteBatch.DrawString(
+                    spriteFont,
+                    text,
+                    (State == EnemyState.Active) ?
+                        InnerWindowOffset + Vector2.UnitX * 2 :
+                        InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness),
+                    Color.White,
+                    0f,
+                    Vector2.One,
+                    1f,
+                    SpriteEffects.None,
+                    0f);
+            }
 
-            TOGame.SpriteBatch.DrawString(
-                spriteFont,
-                text,
-                (State == EnemyState.Active) ?
-                    InnerWindowOffset + Vector2.UnitX * 2 :
-                    InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness),
-                Color.White,
-                0f,
-                Vector2.One,
-                1f,
-                SpriteEffects.None,
-                0f);
 
             foreach (var particle in _particles) {
                 particle.Render(gameTime);

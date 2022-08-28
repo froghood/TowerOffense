@@ -14,7 +14,6 @@ using TowerOffense.Objects.Enemies;
 namespace TowerOffense.Scenes.Gameplay.Objects {
     public class WaveManager : SceneWindow {
 
-
         public int Wave { get => _wave; }
 
         private EntityManager _entityManager;

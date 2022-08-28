@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Extensions;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
@@ -71,7 +72,7 @@ namespace TowerOffense.Objects.Enemies {
                     }
                     break;
                 case EnemyState.Attacking:
-                    if (StateTime >= 2f) {
+                    if (StateTime >= 1.25f) {
                         ChangeState(EnemyState.Active, 10f);
                     }
                     break;
@@ -100,6 +101,35 @@ namespace TowerOffense.Objects.Enemies {
             }
 
             base.Update(gameTime);
+        }
+
+        public override void Render(GameTime gameTime) {
+
+            string sprite = "";
+            int frame;
+
+            switch (State) {
+                case EnemyState.Active:
+                    frame = Convert.ToInt32(StateTime * 4f) % 2;
+                    sprite = $"Sprites/SpiderActive{frame + 1}";
+                    break;
+                case EnemyState.Attacking:
+                    if (StateTime < 1) sprite = $"Sprites/SpiderStartup";
+                    else {
+                        frame = Math.Min(Convert.ToInt32((StateTime - 1) * 12f), 2);
+                        sprite = $"Sprites/SpiderAttack{frame + 1}";
+                    }
+                    break;
+                case EnemyState.Neutralized:
+                    frame = Convert.ToInt32(StateTime * 2f) % 2;
+                    sprite = $"Sprites/SpiderNeutralized{frame + 1}";
+                    break;
+            }
+
+            var texture = TOGame.Assets.Textures[sprite];
+            TOGame.SpriteBatch.Draw(texture, InnerWindowOffset, Color.White);
+
+            base.Render(gameTime);
         }
     }
 }

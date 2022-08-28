@@ -13,19 +13,19 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/Daydream.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/Daydream.spritefont
-
 #begin Fonts/HpDisplay.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:Fonts/HpDisplay.spritefont
+
+#begin Fonts/PixelFont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/PixelFont.spritefont
 
 #begin Sprites/Close.png
 /importer:TextureImporter
@@ -230,6 +230,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:Sprites/SpiderNeutralized2.png
+
+#begin Sprites/SpiderStartup.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Sprites/SpiderStartup.png
 
 #begin Sprites/Title.png
 /importer:TextureImporter

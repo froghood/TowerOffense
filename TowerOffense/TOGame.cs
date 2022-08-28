@@ -77,12 +77,26 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/PlayButtonHover");
             _assets.LoadTexture("Sprites/Close");
             _assets.LoadTexture("Sprites/TowerTargetArrow");
+
+            //gravity
             _assets.LoadTexture("Sprites/GravityTower1");
             _assets.LoadTexture("Sprites/GravityTower2");
             _assets.LoadTexture("Sprites/GravityTowerAttack");
+
+            //particles
             _assets.LoadTexture("Sprites/HitParticle1");
             _assets.LoadTexture("Sprites/HitParticle2");
             _assets.LoadTexture("Sprites/HitParticle3");
+
+            //spider
+            _assets.LoadTexture("Sprites/SpiderActive1");
+            _assets.LoadTexture("Sprites/SpiderActive2");
+            _assets.LoadTexture("Sprites/SpiderStartup");
+            _assets.LoadTexture("Sprites/SpiderAttack1");
+            _assets.LoadTexture("Sprites/SpiderAttack2");
+            _assets.LoadTexture("Sprites/SpiderAttack3");
+            _assets.LoadTexture("Sprites/SpiderNeutralized1");
+            _assets.LoadTexture("Sprites/SpiderNeutralized2");
 
             base.LoadContent();
         }

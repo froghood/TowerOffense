@@ -21,20 +21,6 @@ namespace TowerOffense.Objects.Common {
                 titleBarHeight,
                 borderThickness) {
             _entityManager = entityManager;
-            //SmoothPosition = position.HasValue ? position.Value.ToVector2() : Vector2.Zero;
-        }
-
-        public override void Update(GameTime gameTime) {
-            //if (!IsBeingDragged) {
-            //Position = (SmoothPosition + OffsetPosition).ToPoint();
-            //base.Update(gameTime);
-
-            //} else {
-            base.Update(gameTime);
-            //SmoothPosition = Position.ToVector2();
-
-
-            //}
         }
     }
 }

@@ -32,15 +32,12 @@ namespace TowerOffense.Objects.Base {
             Vector2? position = null,
             int titleBarHeight = 24,
             int borderThickness = 1) : base(
-                scene,
-                entityManager,
-                size,
-                position,
-                titleBarHeight,
-                borderThickness) {
-
-            //TODO: implement
-        }
+            scene,
+            entityManager,
+            size,
+            position,
+            titleBarHeight,
+            borderThickness) { }
 
         public List<Enemy> GetEnemiesInRange() {
             return _entityManager.GetEnemies().Select(enemy => {
@@ -71,7 +68,7 @@ namespace TowerOffense.Objects.Base {
             var arrow = TOGame.Assets.Textures["Sprites/TowerTargetArrow"];
 
             foreach (var enemy in _enemiesInRange) {
-                if (_targetedEnemies.Contains(enemy)) continue;
+
 
                 var manhattanDistance =
                 (enemy.Position + enemy.InnerWindowCenterOffset) -
@@ -82,58 +79,26 @@ namespace TowerOffense.Objects.Base {
                     X = MathF.Cos(angle),
                     Y = MathF.Sin(angle)
                 };
-                angleVector = angleVector / MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
+                angleVector /= MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
                 angleVector *= InnerSize.ToVector2() / 2f;
                 var origin = new Vector2() {
                     X = arrow.Width + 2,
                     Y = arrow.Height / 2f
                 };
 
+                bool isTarget = _targetedEnemies.Contains(enemy);
                 TOGame.SpriteBatch.Draw(
                     texture: arrow,
                     position: InnerWindowCenterOffset + angleVector,
                     sourceRectangle: arrow.Bounds,
-                    color: new Color(255, 255, 255, 100),
+                    color: isTarget ? TitleBarColor : new Color(255, 255, 255, 100),
                     rotation: angle,
                     origin: origin,
-                    scale: 0.5f,
+                    scale: isTarget ? 1f : 0.5f,
                     effects: SpriteEffects.None,
                     0f
                 );
             }
-
-            foreach (var enemy in _targetedEnemies) {
-
-                var manhattanDistance =
-                (enemy.Position + enemy.InnerWindowCenterOffset) -
-                (this.Position + this.InnerWindowCenterOffset);
-
-                var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
-                var angleVector = new Vector2() {
-                    X = MathF.Cos(angle),
-                    Y = MathF.Sin(angle)
-                };
-                angleVector = angleVector / MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
-                angleVector *= InnerSize.ToVector2() / 2f;
-                var origin = new Vector2() {
-                    X = arrow.Width + 2,
-                    Y = arrow.Height / 2f
-                };
-
-                TOGame.SpriteBatch.Draw(
-                    texture: arrow,
-                    position: InnerWindowCenterOffset + angleVector,
-                    sourceRectangle: arrow.Bounds,
-                    color: TitleBarColor,
-                    rotation: angle,
-                    origin: origin,
-                    scale: 1f,
-                    effects: SpriteEffects.None,
-                    0f
-                );
-            }
-
-
 
             base.Render(gameTime);
         }
