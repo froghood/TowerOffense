@@ -29,7 +29,7 @@ namespace TowerOffense.Objects.Base {
             EntityManager entityManager,
             Point size,
             bool center = false,
-            Point? position = null,
+            Vector2? position = null,
             int titleBarHeight = 24,
             int borderThickness = 1) : base(
                 scene,
@@ -44,7 +44,9 @@ namespace TowerOffense.Objects.Base {
 
         public List<Enemy> GetEnemiesInRange() {
             return _entityManager.GetEnemies().Select(enemy => {
-                var manhattanDistance = (enemy.SmoothPosition + InnerWindowCenterOffset) - (this.SmoothPosition + InnerWindowCenterOffset);
+                var manhattanDistance =
+                (enemy.Position + enemy.InnerWindowCenterOffset) -
+                (this.Position + this.InnerWindowCenterOffset);
                 var distance = MathF.Sqrt(manhattanDistance.X * manhattanDistance.X + manhattanDistance.Y * manhattanDistance.Y);
                 return (Enemy: enemy, Distance: distance);
             }).Where(e => e.Distance <= Range).OrderBy(e => e.Distance).Select(e => e.Enemy).ToList();
@@ -71,7 +73,9 @@ namespace TowerOffense.Objects.Base {
             foreach (var enemy in _enemiesInRange) {
                 if (_targetedEnemies.Contains(enemy)) continue;
 
-                var manhattanDistance = (enemy.SmoothPosition + enemy.InnerWindowCenterOffset) - (this.SmoothPosition + this.InnerWindowCenterOffset);
+                var manhattanDistance =
+                (enemy.Position + enemy.InnerWindowCenterOffset) -
+                (this.Position + this.InnerWindowCenterOffset);
 
                 var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
                 var angleVector = new Vector2() {
@@ -100,7 +104,9 @@ namespace TowerOffense.Objects.Base {
 
             foreach (var enemy in _targetedEnemies) {
 
-                var manhattanDistance = (enemy.SmoothPosition + enemy.InnerWindowCenterOffset) - (this.SmoothPosition + this.InnerWindowCenterOffset);
+                var manhattanDistance =
+                (enemy.Position + enemy.InnerWindowCenterOffset) -
+                (this.Position + this.InnerWindowCenterOffset);
 
                 var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
                 var angleVector = new Vector2() {

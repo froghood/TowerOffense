@@ -32,7 +32,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         private bool _waveInProgress;
 
 
-        public WaveManager(Scene scene, EntityManager entityManager, string wavesJsonPath, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, position, size, titleBarHeight, borderThickness) {
+        public WaveManager(Scene scene, EntityManager entityManager, string wavesJsonPath, Vector2 position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, size, position, titleBarHeight, borderThickness) {
             _entityManager = entityManager;
             string wavesJsonRaw = File.ReadAllText(wavesJsonPath);
             _wavesJson = JObject.Parse(wavesJsonRaw);
@@ -45,7 +45,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                 foreach (var spawn in spawnGroup.DequeueSpawns()) {
 
                     int index = _random.Next(_portals.Count);
-                    System.Console.WriteLine(index);
+
                     var portal = _portals[index];
 
                     var enemy = (spawn) switch {
@@ -77,7 +77,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         }
 
         public void OpenShop() {
-            var _shopWindow = new ShopWindow(Scene, _entityManager, this, new Point(300, 300), new Point(360, 240));
+            var _shopWindow = new ShopWindow(Scene, _entityManager, this, new Vector2(300, 300), new Point(360, 240));
             _shopWindow.Closed += (_, _) => {
                 NextWave();
             };

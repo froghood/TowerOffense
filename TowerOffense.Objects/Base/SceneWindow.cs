@@ -10,10 +10,14 @@ namespace TowerOffense.Objects.Base {
     public abstract class SceneWindow : SceneObject {
 
 
-        public Point Position {
-            get => new Point(_form.Location.X, _form.Location.Y);
-            set => _form.Location = new System.Drawing.Point(value.X, value.Y);
-        }
+        public Vector2 Position { get; set; }
+
+        public Vector2 Offset { get; set; }
+
+        // public Point Position {
+        //     get => new Point(_form.Location.X, _form.Location.Y);
+        //     set => _form.Location = new System.Drawing.Point(value.X, value.Y);
+        // }
 
 
 
@@ -24,6 +28,8 @@ namespace TowerOffense.Objects.Base {
                 _form.Location = new System.Drawing.Point(centerPosition.X, centerPosition.Y);
             }
         }
+
+        public Vector2 SmoothPosition { get; set; }
 
         public Point InnerSize {
             get => new Point() {
@@ -70,6 +76,8 @@ namespace TowerOffense.Objects.Base {
         private Form _form;
         private GameWindow _window;
 
+        private float _position;
+
         private int _titleBarHeight;
         private int _borderThickness;
 
@@ -93,7 +101,7 @@ namespace TowerOffense.Objects.Base {
         public SceneWindow(
             Scene scene,
             Point size,
-            Point? position = null,
+            Vector2? position = null,
             int titleBarHeight = 24,
             int borderThickness = 1) : base(scene) {
 
@@ -121,10 +129,10 @@ namespace TowerOffense.Objects.Base {
                 Height = size.Y + _titleBarHeight + _borderThickness * 2
             };
 
-            Position = position.HasValue ? position.Value : Point.Zero;
+            Position = position.HasValue ? position.Value : Vector2.Zero;
+            _form.Location = new System.Drawing.Point((int)Position.X, (int)Position.Y);
 
             _form.FormClosing += (sender, e) => {
-                System.Console.WriteLine("closing");
                 if (!Closeable) {
                     e.Cancel = true;
                     return;
@@ -156,7 +164,7 @@ namespace TowerOffense.Objects.Base {
 
             // window dragging & close button
             if (!Draggable) _isBeingDragged = false;
-            if (_isBeingDragged) _form.Location = new System.Drawing.Point(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
+            //if (_isBeingDragged) _form.Location = new System.Drawing.Point(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
 
             _closeIsHovered = (_isMouseHovering &&
                 _mouseState.X >= _closeBounds.Left - 1 && _mouseState.X < _closeBounds.Right + 1 &&
@@ -189,6 +197,22 @@ namespace TowerOffense.Objects.Base {
                     _isBeingDragged = false;
                     break;
             }
+
+            if (_isBeingDragged) Position = new Vector2(Cursor.Position.X - _dragOffset.X, Cursor.Position.Y - _dragOffset.Y);
+
+
+            Position = new Vector2() {
+                X = MathF.Max(0f, MathF.Min(Position.X, 1920f - Size.X)),
+                Y = MathF.Max(0f, MathF.Min(Position.Y, 1080f - Size.Y))
+            };
+
+            _form.Location = new System.Drawing.Point() {
+                X = (int)MathF.Min(Position.X + Offset.X, 1920f - Size.X),
+                Y = (int)MathF.Min(Position.Y + Offset.Y, 1080f - Size.Y)
+            };
+
+
+
         }
 
         public virtual void Render(GameTime gameTime) {

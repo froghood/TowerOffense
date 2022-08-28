@@ -8,7 +8,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
         private EntityManager _entityManager;
         private WaveManager _waveManager;
 
-        public ShopWindow(Scene scene, EntityManager entityManager, WaveManager waveManager, Point position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, position, size, titleBarHeight, borderThickness) {
+        public ShopWindow(Scene scene, EntityManager entityManager, WaveManager waveManager, Vector2 position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, size, position, titleBarHeight, borderThickness) {
 
             _entityManager = entityManager;
             _waveManager = waveManager;

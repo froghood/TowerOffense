@@ -8,7 +8,7 @@ namespace TowerOffense.Scenes.Example {
     public class ExampleScene : Scene {
         public ExampleScene() : base() {
 
-            var worm = new Worm(this, new Point(400, 400), new Point(120, 120), 10, 24, 1);
+            var worm = new Worm(this, new Vector2(400, 400), new Point(120, 120), 10, 24, 1);
 
             worm.Draggable = false;
             worm.Closeable = false;

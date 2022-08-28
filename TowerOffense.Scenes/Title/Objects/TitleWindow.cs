@@ -13,7 +13,7 @@ namespace TowerOffense.Scenes.Title.Objects {
 
         private Button _playButton;
 
-        public TitleWindow(Scene scene, Point position, Point size) : base(scene, position, size) {
+        public TitleWindow(Scene scene, Vector2 position, Point size) : base(scene, size, position) {
 
             var playButtonSize = new Point(96, 64);
 

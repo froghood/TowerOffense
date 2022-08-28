@@ -11,7 +11,7 @@ namespace TowerOffense.Objects.Towers {
         public NuclearTower(
             Scene scene,
             EntityManager entityManager,
-            Point? position = null) : base(
+            Vector2? position = null) : base(
             scene,
             entityManager,
             new Point(100, 100),
@@ -30,7 +30,7 @@ namespace TowerOffense.Objects.Towers {
         public override void Update(GameTime gameTime) {
 
             _enemiesInRange = GetEnemiesInRange();
-            _targetedEnemies = _enemiesInRange.Where(e => e.EnemyState != EnemyState.Neutralized).ToList();
+            _targetedEnemies = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).ToList();
 
             if (State == TowerState.Idle && _targetedEnemies.Count > 0) ChangeState(TowerState.Attacking);
             else if (State == TowerState.Attacking && _targetedEnemies.Count == 0) ChangeState(TowerState.Idle);
@@ -42,7 +42,7 @@ namespace TowerOffense.Objects.Towers {
                     if (_attackTimer >= AttackSpeed) {
                         _attackTimer -= AttackSpeed;
                         foreach (var enemy in _targetedEnemies) {
-                            enemy.Damage(Damage);
+                            enemy.Damage(this, Damage);
                         }
                     }
                     break;

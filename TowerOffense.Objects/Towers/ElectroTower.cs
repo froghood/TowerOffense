@@ -10,7 +10,7 @@ namespace TowerOffense.Objects.Towers {
         public ElectroTower(
             Scene scene,
             EntityManager entityManager,
-            Point? position = null) : base(
+            Vector2? position = null) : base(
             scene,
             entityManager,
             new Point(100, 100),
@@ -20,7 +20,7 @@ namespace TowerOffense.Objects.Towers {
             FocusedBorderColor = TitleBarColor;
             BorderColor = new Color(84, 118, 128);
 
-            Range = 480f;
+            Range = 360f;
             AttackSpeed = 0.5f;
             Damage = 2.5f;
             SellPrice = 1;
@@ -30,7 +30,7 @@ namespace TowerOffense.Objects.Towers {
 
             _enemiesInRange = GetEnemiesInRange();
 
-            var first = _enemiesInRange.Where(e => e.EnemyState != EnemyState.Neutralized).FirstOrDefault();
+            var first = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).FirstOrDefault();
 
             _targetedEnemies = (first != null) ?
             new List<Enemy> { first } :
@@ -42,7 +42,7 @@ namespace TowerOffense.Objects.Towers {
                         ChangeState(TowerState.Attacking);
                         foreach (var enemy in _targetedEnemies) {
 
-                            enemy.Damage(Damage);
+                            enemy.Damage(this, Damage);
                         }
                     }
                     break;

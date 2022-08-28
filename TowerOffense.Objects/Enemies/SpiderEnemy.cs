@@ -8,7 +8,9 @@ using TowerOffense.Scenes.Gameplay.Objects;
 
 namespace TowerOffense.Objects.Enemies {
     public class SpiderEnemy : Enemy {
-
+        private const int ActiveStateTime = 10;
+        private const int AttackingStateTime = 2;
+        private const int NeutralizedStateTime = 10;
         private float _moveTime;
         private Vector2 _velocity;
         private float _speed = 200;
@@ -17,7 +19,7 @@ namespace TowerOffense.Objects.Enemies {
         public SpiderEnemy(
             Scene scene,
             EntityManager entityManager,
-            Point position,
+            Vector2 position,
             bool fromPortal
         ) : base(
             scene,
@@ -30,18 +32,20 @@ namespace TowerOffense.Objects.Enemies {
             MaxHealth = 5f;
             Health = MaxHealth;
 
-            Damaged += (_, _) => {
-                System.Console.WriteLine("damaged");
+            Damaged += (sender, amount) => {
+                if (Health - amount <= 0f) {
+                    ChangeState(EnemyState.Neutralized, 5f);
+                }
             };
 
             StateChanged += (sender, state) => {
 
-                System.Console.WriteLine($"new: {state}, old: {EnemyState}");
+                System.Console.WriteLine($"new: {state}, old: {State}");
 
                 switch (state) {
                     case EnemyState.Active:
                         _speed = 200;
-                        if (EnemyState == EnemyState.Neutralized) Health = MaxHealth;
+                        if (State == EnemyState.Neutralized) Health = MaxHealth;
                         break;
                     case EnemyState.Attacking:
                         _speed = 0;
@@ -51,6 +55,8 @@ namespace TowerOffense.Objects.Enemies {
                         break;
                 }
             };
+
+            ChangeState(EnemyState.Active, 10f);
         }
 
         public override void Update(GameTime gameTime) {
@@ -58,25 +64,25 @@ namespace TowerOffense.Objects.Enemies {
             var deltaTime = gameTime.DeltaTime();
 
 
-            switch (EnemyState) {
+            switch (State) {
                 case EnemyState.Active:
-                    if (StateTime >= 10) {
-                        ChangeState(EnemyState.Attacking);
+                    if (StateTime >= 10f) {
+                        ChangeState(EnemyState.Attacking, 2f);
                     }
                     break;
                 case EnemyState.Attacking:
-                    if (StateTime >= 2) {
-                        ChangeState(EnemyState.Active);
+                    if (StateTime >= 2f) {
+                        ChangeState(EnemyState.Active, 10f);
                     }
                     break;
                 case EnemyState.Neutralized:
-                    if (StateTime >= 10) {
-                        ChangeState(EnemyState.Active);
+                    if (StateTime >= 5f) {
+                        ChangeState(EnemyState.Active, 10f);
                     }
                     break;
             }
 
-            if (EnemyState == EnemyState.Active) {
+            if (State == EnemyState.Active) {
 
                 _moveTime += deltaTime;
 
@@ -90,11 +96,7 @@ namespace TowerOffense.Objects.Enemies {
                     Y = MathF.Sin(_angle) * _speed * deltaTime
                 };
 
-                SmoothPosition += _velocity;
-                SmoothPosition = new Vector2() {
-                    X = MathF.Max(0f, MathF.Min(SmoothPosition.X, 1920f - Size.X)),
-                    Y = MathF.Max(0f, MathF.Min(SmoothPosition.Y, 1080f - Size.Y))
-                };
+                Position += _velocity;
             }
 
             base.Update(gameTime);

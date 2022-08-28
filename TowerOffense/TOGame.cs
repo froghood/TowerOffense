@@ -9,6 +9,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System;
 using TowerOffense.Scenes;
 using Microsoft.Xna.Framework.Content;
+using TowerOffense.Extensions;
 
 namespace TowerOffense {
     public class TOGame : Game {
@@ -56,6 +57,7 @@ namespace TowerOffense {
 
 
             IsFixedTimeStep = false;
+            _graphics.SynchronizeWithVerticalRetrace = false;
 
             var form = (Form)Form.FromHandle(Window.Handle);
             form.FormBorderStyle = FormBorderStyle.None;
@@ -78,11 +80,16 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/GravityTower1");
             _assets.LoadTexture("Sprites/GravityTower2");
             _assets.LoadTexture("Sprites/GravityTowerAttack");
+            _assets.LoadTexture("Sprites/HitParticle1");
+            _assets.LoadTexture("Sprites/HitParticle2");
+            _assets.LoadTexture("Sprites/HitParticle3");
 
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime) {
+
+            System.Console.WriteLine(1 / gameTime.DeltaTime());
 
             while (_commandQueue.Count > 0) _commandQueue.Dequeue().Invoke();
 

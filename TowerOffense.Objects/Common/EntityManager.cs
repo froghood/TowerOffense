@@ -20,9 +20,7 @@ namespace TowerOffense.Objects.Common {
         }
 
         public Enemy CreateEnemy<T>(params object[] e) where T : Enemy {
-            System.Console.WriteLine(e.Length);
             var args = new object[] { Scene, this }.Concat(e).ToArray();
-            System.Console.WriteLine(args.Length);
             var enemy = (T)Activator.CreateInstance(typeof(T), args);
             _enemies.Add(enemy);
             return enemy;

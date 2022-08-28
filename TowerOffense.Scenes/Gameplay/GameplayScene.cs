@@ -13,7 +13,7 @@ namespace TowerOffense.Scenes.Gameplay {
 
         public GameplayScene() {
             _entityManager = new EntityManager(this);
-            _waveManager = new WaveManager(this, _entityManager, "Content/Waves.json", new Point(24, 24), new Point(80, 50));
+            _waveManager = new WaveManager(this, _entityManager, "Content/Waves.json", new Vector2(24, 24), new Point(80, 50));
             _waveManager.Closeable = false;
         }
 
@@ -22,9 +22,9 @@ namespace TowerOffense.Scenes.Gameplay {
             AddObject(_waveManager);
 
 
-            AddObject(_entityManager.CreateTower<NuclearTower>(new Point(20, 20)));
-            AddObject(_entityManager.CreateTower<ElectroTower>(new Point(40, 40)));
-            AddObject(_entityManager.CreateTower<GravityTower>(new Point(60, 60)));
+            AddObject(_entityManager.CreateTower<NuclearTower>(new Vector2(20, 20)));
+            AddObject(_entityManager.CreateTower<ElectroTower>(new Vector2(40, 40)));
+            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(60, 60)));
 
             _waveManager.OpenShop();
         }

@@ -14,7 +14,7 @@ namespace TowerOffense.Scenes.Example.Objects {
         private double _time;
         private Random _random;
 
-        public Worm(Scene scene, Point position, Point size, int numSegments, int titleBarHeight, int borderThickness) : base(scene, position, size, titleBarHeight, borderThickness) {
+        public Worm(Scene scene, Vector2 position, Point size, int numSegments, int titleBarHeight, int borderThickness) : base(scene, size, position, titleBarHeight, borderThickness) {
             _position = new Vector2(position.X, position.Y);
             _segments = new List<Segment>();
             _random = new Random();
@@ -32,17 +32,17 @@ namespace TowerOffense.Scenes.Example.Objects {
             }
 
             _angle += _turnAngle;
-            _position += new Vector2() {
+            Position += new Vector2() {
                 X = MathF.Cos(_angle) * _speed,
                 Y = MathF.Sin(_angle) * _speed
             };
 
-            _position = new Vector2() {
-                X = MathF.Max(0f, MathF.Min(_position.X, 1920f - Size.X)),
-                Y = MathF.Max(0f, MathF.Min(_position.Y, 1080f - Size.Y))
-            };
+            // _position = new Vector2() {
+            //     X = MathF.Max(0f, MathF.Min(_position.X, 1920f - Size.X)),
+            //     Y = MathF.Max(0f, MathF.Min(_position.Y, 1080f - Size.Y))
+            // };
 
-            Position = _position.ToPoint();
+            //Position = _position.ToPoint();
 
             base.Update(gameTime);
         }

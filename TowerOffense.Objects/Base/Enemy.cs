@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Extensions;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
@@ -7,22 +9,25 @@ using TowerOffense.Scenes;
 namespace TowerOffense.Objects.Base {
     public abstract class Enemy : Entity {
 
-        public EnemyState EnemyState { get => _enemyState; }
+        public EnemyState State { get => _enemyState; }
         protected float StateTime { get => _stateTime; }
 
         protected float MaxHealth { get; set; }
         protected float Health { get; set; }
 
         private float _stateTime;
+        private float _stateDuration;
         private float _shakeTime;
         private float _shakeAmount;
         private EnemyState _enemyState;
+
+        private List<Particle> _particles = new();
 
         public Enemy(
             Scene scene,
             EntityManager entityManager,
             Point size,
-            Point? position = null,
+            Vector2? position = null,
             bool fromPortal = true,
             int titleBarHeight = 24,
             int borderThickness = 1
@@ -34,7 +39,7 @@ namespace TowerOffense.Objects.Base {
             titleBarHeight,
             borderThickness) {
 
-            if (fromPortal) SmoothPosition = Position.ToVector2() - InnerWindowCenterOffset;
+            if (fromPortal) Position -= InnerWindowCenterOffset;
 
             Damaged += (sender, amount) => {
                 _shakeTime = 0.333f;
@@ -73,26 +78,70 @@ namespace TowerOffense.Objects.Base {
             _stateTime += gameTime.DeltaTime();
             _shakeTime = MathF.Max(0f, _shakeTime - gameTime.DeltaTime());
 
-            OffsetPosition = new Vector2() {
+            Offset = new Vector2() {
                 X = MathF.Cos(_stateTime * MathF.Tau * 10) * (_shakeAmount * _shakeTime * 2),
                 Y = 0f
             };
 
+            foreach (var particle in _particles) {
+                particle.Update(gameTime);
+            }
+            _particles.RemoveAll(p => p.Destroyed);
+
             base.Update(gameTime);
         }
 
-        public void Damage(float amount) {
-            Health -= amount;
-            Damaged.Invoke(this, amount);
-            if (Health <= 0 && _enemyState != EnemyState.Neutralized) {
-                ChangeState(EnemyState.Neutralized);
+        public override void Render(GameTime gameTime) {
+
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
+            var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
+
+
+            TOGame.SpriteBatch.DrawString(
+                spriteFont,
+                text,
+                (State == EnemyState.Active) ?
+                    InnerWindowOffset + Vector2.UnitX * 2 :
+                    InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness),
+                Color.White,
+                0f,
+                Vector2.One,
+                1f,
+                SpriteEffects.None,
+                0f);
+
+            foreach (var particle in _particles) {
+                particle.Render(gameTime);
             }
+
+            base.Render(gameTime);
         }
 
-        public void ChangeState(EnemyState enemyState) {
+        public void Damage(Tower tower, float amount) {
+            Damaged.Invoke(this, amount);
+
+            var manhattanDistance =
+                (tower.Position + tower.InnerWindowCenterOffset) -
+                (this.Position + this.InnerWindowCenterOffset);
+            var angle = MathF.Atan2(manhattanDistance.Y, manhattanDistance.X);
+            var angleVector = new Vector2() {
+                X = MathF.Cos(angle),
+                Y = MathF.Sin(angle)
+            };
+            angleVector = angleVector / MathF.Max(MathF.Abs(angleVector.X), MathF.Abs(angleVector.Y));
+            angleVector *= InnerSize.ToVector2() / 2f;
+
+            _particles.Add(new Particle(this, InnerSize.ToVector2() / 2f + angleVector * 0.9f, tower.TitleBarColor));
+
+
+            Health -= amount;
+        }
+
+        public void ChangeState(EnemyState enemyState, float duration) {
             StateChanged?.Invoke(this, enemyState);
             _enemyState = enemyState;
             _stateTime = 0f;
+            _stateDuration = duration;
         }
 
         protected event EventHandler<EnemyState> StateChanged;

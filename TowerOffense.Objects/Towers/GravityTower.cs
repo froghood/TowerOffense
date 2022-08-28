@@ -12,7 +12,7 @@ namespace TowerOffense.Objects.Towers {
         public GravityTower(
             Scene scene,
             EntityManager entityManager,
-            Point? position = null) : base(
+            Vector2? position = null) : base(
             scene,
             entityManager,
             new Point(100, 100),
@@ -32,7 +32,7 @@ namespace TowerOffense.Objects.Towers {
 
             _enemiesInRange = GetEnemiesInRange();
 
-            var first = _enemiesInRange.Where(e => e.EnemyState != EnemyState.Neutralized).FirstOrDefault();
+            var first = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).FirstOrDefault();
 
             _targetedEnemies = (first != null) ?
             new List<Enemy> { first } :
@@ -44,7 +44,7 @@ namespace TowerOffense.Objects.Towers {
                         ChangeState(TowerState.Attacking);
                         foreach (var enemy in _targetedEnemies) {
 
-                            enemy.Damage(Damage);
+                            enemy.Damage(this, Damage);
                         }
                     }
                     break;
@@ -61,8 +61,6 @@ namespace TowerOffense.Objects.Towers {
         public override void Render(GameTime gameTime) {
 
             Texture2D texture;
-
-            System.Console.WriteLine(StateTime);
 
             switch (State) {
                 case TowerState.Idle:

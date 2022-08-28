@@ -67,7 +67,7 @@ namespace TowerOffense.Scenes {
                 graphicsDevice.SetRenderTarget(windowObject.RenderTarget);
                 graphicsDevice.Clear(windowObject.ClearColor);
 
-                TOGame.SpriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend);
+                TOGame.SpriteBatch.Begin(SpriteSortMode.BackToFront);
                 windowObject.Render(gameTime);
                 TOGame.SpriteBatch.End();
 
