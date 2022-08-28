@@ -69,6 +69,8 @@ namespace TowerOffense.Objects.Base {
         private Form _form;
         private GameWindow _window;
 
+        private bool _visible = true;
+
         private int _titleBarHeight;
         private int _borderThickness;
 
@@ -88,6 +90,8 @@ namespace TowerOffense.Objects.Base {
         private Texture2D _pixel;
 
         private SwapChainRenderTarget _renderTarget;
+
+
 
         public SceneWindow(
             Scene scene,
@@ -225,7 +229,7 @@ namespace TowerOffense.Objects.Base {
                 Y = _closeBounds.Y + _closeBounds.Height / 2 - _closeTexture.Height / 2
             }, Closeable ? Color.White : new Color(255, 255, 255, 45));
 
-            _form.Visible = !_form.IsDisposed;
+            _form.Visible = _visible;
         }
 
         public void Draw(Texture2D texture, Vector2 position, Color color) {
@@ -242,11 +246,12 @@ namespace TowerOffense.Objects.Base {
         }
 
         public void Hide() {
+            _visible = false;
             _form.Hide();
         }
 
         public void Show() {
-            _form.Show();
+            _visible = true;
         }
 
         public override void Destroy() {

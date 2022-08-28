@@ -22,6 +22,13 @@ namespace TowerOffense {
         public static Random Random { get => Instance._random; }
         public static PlayerManager PlayerManager { get => Instance._playerManager; }
 
+        public static Point DisplaySize {
+            get => new Point() {
+                X = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
+                Y = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height
+            };
+        }
+
         private AssetManager _assets;
         private SceneManager _scenes;
         private Queue<Action> _commandQueue;
@@ -39,7 +46,7 @@ namespace TowerOffense {
             _commandQueue = new Queue<Action>();
             _graphics = new GraphicsDeviceManager(this);
             _random = new Random();
-            _playerManager = PlayerManager.Instance;
+            _playerManager = new PlayerManager();
 
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
@@ -102,8 +109,6 @@ namespace TowerOffense {
         }
 
         protected override void Update(GameTime gameTime) {
-
-            System.Console.WriteLine(1 / gameTime.DeltaTime());
 
             while (_commandQueue.Count > 0) _commandQueue.Dequeue().Invoke();
 

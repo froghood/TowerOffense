@@ -10,6 +10,7 @@ using TowerOffense.Objects.Common;
 using TowerOffense.Scenes.Gameplay.Objects.Shop;
 using TowerOffense.Scenes.Gameplay.Objects;
 using TowerOffense.Objects.Enemies;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace TowerOffense.Scenes.Gameplay.Objects {
     public class WaveManager : SceneWindow {
@@ -31,7 +32,16 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         private bool _waveInProgress;
 
 
-        public WaveManager(Scene scene, EntityManager entityManager, string wavesJsonPath, Vector2 position, Point size, int titleBarHeight = 24, int borderThickness = 1) : base(scene, size, position, titleBarHeight, borderThickness) {
+        public WaveManager(Scene scene, EntityManager entityManager, string wavesJsonPath)
+        : base(scene, new Point(160, 40), new Vector2(24, 24)) {
+
+            ClearColor = new Color(104, 66, 74);
+            TitleBarColor = new Color(186, 120, 93);
+            FocusedBorderColor = TitleBarColor;
+            BorderColor = FocusedBorderColor * 0.5f;
+
+            Hide();
+
             _entityManager = entityManager;
             string wavesJsonRaw = File.ReadAllText(wavesJsonPath);
             _wavesJson = JObject.Parse(wavesJsonRaw);
@@ -47,8 +57,10 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
                     var portal = _portals[index];
 
+                    System.Console.WriteLine(spawn);
+
                     var enemy = (spawn) switch {
-                        "TestEnemy" => _entityManager.CreateEnemy<SpiderEnemy>(portal.GetSpawnPosition(), true),
+                        "Spider" => _entityManager.CreateEnemy<SpiderEnemy>(portal.GetSpawnPosition(), true),
                         _ => throw new Exception(),
                     };
 
@@ -63,6 +75,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
                 if (_entityManager.RemainingEnemies == 0) {
                     _waveInProgress = false;
+                    Hide();
                     OpenShop();
                 }
             }
@@ -72,6 +85,15 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         }
 
         public override void Render(GameTime gameTime) {
+
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
+            string text = $"wave {_wave}";
+            var fontSize = spriteFont.MeasureString(text);
+
+            TOGame.SpriteBatch.DrawString(spriteFont, text, InnerWindowCenterOffset - fontSize / 2f, new Color(40, 25, 43));
+
+
+
             base.Render(gameTime);
         }
 
@@ -79,6 +101,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             var _shopWindow = new ShopWindow(Scene, _entityManager, this, new Vector2(300, 300), new Point(360, 240));
             _shopWindow.Closed += (_, _) => {
                 NextWave();
+                Show();
             };
             Scene.AddObject(_shopWindow);
         }
@@ -91,8 +114,6 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             _time = 0;
             _waveInProgress = true;
 
-
-
             var currentWaveJson = _wavesJson[$"{_wave}"];
             int numPortals = int.Parse(currentWaveJson["Portals"].ToString());
 
@@ -103,6 +124,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             }
 
             _spawnGroups = JsonConvert.DeserializeObject<List<SpawnGroup>>(currentWaveJson["SpawnGroups"].ToString());
+
         }
     }
 }

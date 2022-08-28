@@ -41,12 +41,11 @@ namespace TowerOffense.Objects.Enemies {
 
             StateChanged += (sender, state) => {
 
-                System.Console.WriteLine($"new: {state}, old: {State}");
-
                 switch (state) {
                     case EnemyState.Active:
                         _speed = 200;
                         if (State == EnemyState.Neutralized) Health = MaxHealth;
+                        if (State == EnemyState.Attacking) TOGame.PlayerManager.Damage(1);
                         break;
                     case EnemyState.Attacking:
                         _speed = 0;

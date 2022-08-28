@@ -10,7 +10,7 @@ namespace TowerOffense.Objects.Base {
     public abstract class Enemy : Entity {
 
         public EnemyState State { get => _enemyState; }
-        protected float StateTime { get => _stateTime; }
+        public float StateTime { get => _stateTime; }
 
         protected float MaxHealth { get; set; }
         protected float Health { get; set; }
@@ -57,16 +57,13 @@ namespace TowerOffense.Objects.Base {
                     case EnemyState.Neutralized:
                         Draggable = true;
                         Closeable = true;
-                        TitleBarColor = new Color(255, 162, 187);
-                        BorderColor = new Color(128, 81, 94);
+                        TitleBarColor = new Color(180, 120, 140);
+                        BorderColor = new Color(90, 60, 70);
                         FocusedBorderColor = TitleBarColor;
                         break;
                     case EnemyState.Attacking:
                         Draggable = false;
                         Closeable = false;
-                        TitleBarColor = new Color(255, 0, 60);
-                        BorderColor = new Color(128, 0, 30);
-                        FocusedBorderColor = TitleBarColor;
                         break;
                     default:
                         Draggable = false;
@@ -100,7 +97,7 @@ namespace TowerOffense.Objects.Base {
 
         public override void Render(GameTime gameTime) {
 
-            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Pixelfont");
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
             if (State != EnemyState.Attacking) {
@@ -116,6 +113,11 @@ namespace TowerOffense.Objects.Base {
                     1f,
                     SpriteEffects.None,
                     0f);
+            } else {
+                var colorMod = (MathF.Sin(StateTime * 28f) + 1f) / 3f;
+                TitleBarColor = new Color(1f, colorMod, colorMod);
+                FocusedBorderColor = TitleBarColor;
+                BorderColor = TitleBarColor * 0.5f;
             }
 
 

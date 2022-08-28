@@ -1,32 +1,29 @@
+using System;
 using TowerOffense;
 using TowerOffense.Scenes.GameOver;
-namespace TowerOffense{
+
+namespace TowerOffense {
     public class PlayerManager {
-        private int _hp;
+        public int Health { get; private set; }
+        public int Money { get; set; }
 
-        public int Hp { get => _hp; }
+        private bool _dead;
 
-        private PlayerManager() {
-            _hp = 100; // Put this in a config file somewhere maybe
-        }
-        private static PlayerManager instance = null;
-        public static PlayerManager Instance {
-            get {
-                if ( instance == null ){
-                    instance = new PlayerManager();
-                }
-                return instance;
+        public event EventHandler OnDeath;
+
+        public void Damage(int amount) {
+            Health = Math.Max(0, Health - amount);
+            System.Console.WriteLine(Health);
+            if (Health == 0 && !_dead) {
+                OnDeath?.Invoke(this, EventArgs.Empty);
+                _dead = true;
             }
         }
 
-        public void SubtractHp(int change){
-            _hp -= change;
-            if (_hp <= 0){
-                Die();
-            }
-        }
-        public void Die(){
-            TOGame.Scenes.PushScene<GameOverScene>();
+        public void Restart(int startingHealth, int startingMoney) {
+            Health = startingHealth;
+            System.Console.WriteLine(Health);
+            Money = startingMoney;
         }
     }
 }
