@@ -19,7 +19,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         private EntityManager _entityManager;
 
-        private int _wave = 0;
+        private int _wave = 1;
         private double _time = 0;
 
         private JObject _wavesJson;
@@ -40,8 +40,6 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             FocusedBorderColor = TitleBarColor;
             BorderColor = FocusedBorderColor * 0.5f;
 
-            Hide();
-
             _entityManager = entityManager;
             string wavesJsonRaw = File.ReadAllText(wavesJsonPath);
             _wavesJson = JObject.Parse(wavesJsonRaw);
@@ -60,7 +58,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                     System.Console.WriteLine(spawn);
 
                     var enemy = (spawn) switch {
-                        "Spider" => _entityManager.CreateEnemy<SpiderEnemy>(portal.GetSpawnPosition(), true),
+                        "Spider" => _entityManager.CreateEnemy<Spider>(portal.GetSpawnPosition(), true),
                         _ => throw new Exception(),
                     };
 
@@ -75,7 +73,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
                 if (_entityManager.RemainingEnemies == 0) {
                     _waveInProgress = false;
-                    Hide();
+                    _wave++;
                     OpenShop();
                 }
             }
@@ -108,9 +106,8 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         public void NextWave() {
 
-            if (_wave + 1 > _wavesJson.Count) return; // return if no more waves
+            if (_wave > _wavesJson.Count) return; // return if no more waves
 
-            _wave++;
             _time = 0;
             _waveInProgress = true;
 

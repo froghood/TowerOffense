@@ -8,16 +8,18 @@ using TowerOffense.Scenes;
 using TowerOffense.Scenes.Gameplay.Objects;
 
 namespace TowerOffense.Objects.Enemies {
-    public class SpiderEnemy : Enemy {
+    public class Spider : Enemy {
         private const int ActiveStateTime = 10;
         private const int AttackingStateTime = 2;
         private const int NeutralizedStateTime = 10;
         private float _moveTime;
         private Vector2 _velocity;
-        private float _speed = 200;
+        private float _speed = 300;
         private float _angle;
 
-        public SpiderEnemy(
+        private Random _random;
+
+        public Spider(
             Scene scene,
             EntityManager entityManager,
             Vector2 position,
@@ -29,6 +31,9 @@ namespace TowerOffense.Objects.Enemies {
             position,
             fromPortal
         ) {
+
+            _random = new Random();
+            _angle = _random.NextSingle() * MathF.Tau;
 
             MaxHealth = 5f;
             Health = MaxHealth;
@@ -91,10 +96,12 @@ namespace TowerOffense.Objects.Enemies {
                     _angle = new Random().NextSingle() * MathF.Tau;
                 }
 
+
+
                 _velocity = new Vector2() {
                     X = MathF.Cos(_angle) * _speed * deltaTime,
                     Y = MathF.Sin(_angle) * _speed * deltaTime
-                };
+                } * (MathF.Floor(_moveTime * 2f + 1f) % 2f);
 
                 Position += _velocity;
             }

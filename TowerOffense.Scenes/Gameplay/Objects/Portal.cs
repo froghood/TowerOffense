@@ -16,13 +16,11 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             FocusedBorderColor = TitleBarColor;
             BorderColor = new Color(50, 0, 64);
 
-            var displayWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-            var displayHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
             var random = new Random();
 
             Position = new Vector2() {
-                X = random.Next(displayWidth - Size.X),
-                Y = random.Next(displayHeight - Size.Y)
+                X = random.Next(TOGame.DisplaySize.X - Size.X),
+                Y = random.Next(TOGame.DisplaySize.Y - Size.Y)
             };
 
 
