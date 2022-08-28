@@ -18,6 +18,5 @@ namespace TowerOffense {
         public void LoadTexture(string name) {
             _textures.TryAdd(name, _content.Load<Texture2D>(name));
         }
-
     }
 }

@@ -9,6 +9,7 @@ using Keys = Microsoft.Xna.Framework.Input.Keys;
 using System;
 using TowerOffense.Scenes;
 using Microsoft.Xna.Framework.Content;
+using TowerOffense.Extensions;
 
 namespace TowerOffense {
     public class TOGame : Game {
@@ -54,16 +55,15 @@ namespace TowerOffense {
 
         protected override void Initialize() {
 
+
             IsFixedTimeStep = false;
+            _graphics.SynchronizeWithVerticalRetrace = false;
 
             var form = (Form)Form.FromHandle(Window.Handle);
-
-            // move it super far out of vision; without this you can still see it before it disappears
-            // kinda hacky but i cant find a better way to do it
-            form.Location = new System.Drawing.Point(int.MaxValue, 0);
-
-            // instantly hide the main window as soon we are able to
-            form.Activated += (sender, e) => form.Hide();
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.VisibleChanged += (_, _) => {
+                if (form.Visible) form.Visible = false;
+            };
 
             base.Initialize();
         }
@@ -76,11 +76,34 @@ namespace TowerOffense {
             _assets.LoadTexture("Sprites/PlayButton");
             _assets.LoadTexture("Sprites/PlayButtonHover");
             _assets.LoadTexture("Sprites/Close");
+            _assets.LoadTexture("Sprites/TowerTargetArrow");
+
+            //gravity
+            _assets.LoadTexture("Sprites/GravityTower1");
+            _assets.LoadTexture("Sprites/GravityTower2");
+            _assets.LoadTexture("Sprites/GravityTowerAttack");
+
+            //particles
+            _assets.LoadTexture("Sprites/HitParticle1");
+            _assets.LoadTexture("Sprites/HitParticle2");
+            _assets.LoadTexture("Sprites/HitParticle3");
+
+            //spider
+            _assets.LoadTexture("Sprites/SpiderActive1");
+            _assets.LoadTexture("Sprites/SpiderActive2");
+            _assets.LoadTexture("Sprites/SpiderStartup");
+            _assets.LoadTexture("Sprites/SpiderAttack1");
+            _assets.LoadTexture("Sprites/SpiderAttack2");
+            _assets.LoadTexture("Sprites/SpiderAttack3");
+            _assets.LoadTexture("Sprites/SpiderNeutralized1");
+            _assets.LoadTexture("Sprites/SpiderNeutralized2");
 
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime) {
+
+            System.Console.WriteLine(1 / gameTime.DeltaTime());
 
             while (_commandQueue.Count > 0) _commandQueue.Dequeue().Invoke();
 

@@ -6,13 +6,14 @@ using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
 using TowerOffense.Scenes.Example;
+using TowerOffense.Scenes.Gameplay;
 
 namespace TowerOffense.Scenes.Title.Objects {
     public class TitleWindow : SceneWindow {
 
         private Button _playButton;
 
-        public TitleWindow(Scene scene, Point position, Point size) : base(scene, position, size) {
+        public TitleWindow(Scene scene, Vector2 position, Point size) : base(scene, size, position) {
 
             var playButtonSize = new Point(96, 64);
 
@@ -24,7 +25,7 @@ namespace TowerOffense.Scenes.Title.Objects {
             _playButton = new Button(this, playButtonPosition, playButtonSize);
 
             _playButton.Clicked += (_, _) => {
-                TOGame.Scenes.PushScene<ExampleScene>();
+                TOGame.Scenes.PushScene<GameplayScene>();
             };
 
             _playButton.Texture = TOGame.Assets.Textures["Sprites/PlayButton"];

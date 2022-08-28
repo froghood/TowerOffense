@@ -8,17 +8,17 @@ namespace TowerOffense.Objects {
         private SpriteFont _font;
         private string _text;
 
-        public HpDisplay(Scene scene, Point position, Point size) : base(scene, position, size) {
+        public HpDisplay(Scene scene, Vector2 position, Point size) : base(scene, size, position) {
             _font = TOGame.Instance.Content.Load<SpriteFont>("Fonts/HpDisplay");
         }
 
-        public override void Update(GameTime gameTime){
+        public override void Update(GameTime gameTime) {
             _text = TOGame.PlayerManager.Hp.ToString();
             base.Update(gameTime);
         }
-        public override void Render(GameTime gameTime){
+        public override void Render(GameTime gameTime) {
             Vector2 textMiddlePoint = _font.MeasureString(_text) / 2;
-            Vector2 position = new Vector2(48,48); // some work to center this would be cool
+            Vector2 position = new Vector2(48, 48); // some work to center this would be cool
             DrawString(_font, _text, position, Color.Red);
             base.Render(gameTime);
         }

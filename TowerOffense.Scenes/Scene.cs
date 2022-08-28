@@ -12,13 +12,20 @@ namespace TowerOffense.Scenes {
 
         private List<SceneObject> _sceneObjects = new();
         private List<SceneWindow> _sceneWindows = new();
+        private bool _isUpdating;
 
         public void AddObject<T>(T sceneObject) where T : SceneObject {
-            _sceneObjects.Add(sceneObject);
 
-            if (typeof(T).IsSubclassOf(typeof(SceneWindow))) {
-                _sceneWindows.Add(sceneObject as SceneWindow);
-            }
+            var addAction = () => {
+                _sceneObjects.Add(sceneObject);
+                if (typeof(T).IsSubclassOf(typeof(SceneWindow))) {
+                    _sceneWindows.Add(sceneObject as SceneWindow);
+                }
+            };
+
+            // add next tick if added from update chain
+            if (_isUpdating) TOGame.Command(addAction);
+            else addAction();
         }
 
         public void AddObjects<T>(IEnumerable<T> _sceneObjects) where T : SceneObject {
@@ -26,6 +33,7 @@ namespace TowerOffense.Scenes {
         }
 
         public void Update(GameTime gameTime) {
+            _isUpdating = true;
 
             bool isOverlappingWindow = false;
 
@@ -47,6 +55,8 @@ namespace TowerOffense.Scenes {
 
             _sceneObjects.RemoveAll(obj => obj.IsDestroyed);
             _sceneWindows.RemoveAll(obj => obj.IsDestroyed);
+
+            _isUpdating = false;
         }
 
         public void Render(GameTime gameTime) {
