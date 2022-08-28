@@ -37,13 +37,6 @@ namespace TowerOffense.Scenes.Example.Objects {
                 Y = MathF.Sin(_angle) * _speed
             };
 
-            // _position = new Vector2() {
-            //     X = MathF.Max(0f, MathF.Min(_position.X, 1920f - Size.X)),
-            //     Y = MathF.Max(0f, MathF.Min(_position.Y, 1080f - Size.Y))
-            // };
-
-            //Position = _position.ToPoint();
-
             base.Update(gameTime);
         }
 

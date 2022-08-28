@@ -58,7 +58,6 @@ namespace TowerOffense.Objects.Base {
         public override void Update(GameTime gameTime) {
 
             _stateTime += gameTime.DeltaTime();
-            //_attackTimer += gameTime.DeltaTime();
 
             base.Update(gameTime);
         }
