@@ -1,0 +1,11 @@
+* shop descriptions and prices
+* game over window
+    - victory or death
+    - restart/menu
+    - sound
+* hud color changes
+* worm enemy
+* electro target healthy
+* waves
+* better title screen
+* credits
