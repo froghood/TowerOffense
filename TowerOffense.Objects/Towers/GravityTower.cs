@@ -25,7 +25,7 @@ namespace TowerOffense.Objects.Towers {
             Range = float.MaxValue;
             AttackSpeed = 0.25f;
             Damage = 0.5f;
-            SellPrice = 4;
+            SellPrice = 3;
         }
 
         public override void Update(GameTime gameTime) {
@@ -48,7 +48,7 @@ namespace TowerOffense.Objects.Towers {
             switch (State) {
                 case TowerState.Idle:
                     if (StateTime >= AttackSpeed && _targetedEnemies.Count > 0) {
-                        if (!TOGame.Player.Dead) {
+                        if (!TOGame.Player.RunFinished) {
                             ChangeState(TowerState.Attacking);
                             foreach (var enemy in _targetedEnemies) {
 

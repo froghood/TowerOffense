@@ -252,12 +252,12 @@ namespace TowerOffense.Objects.Base {
             Destroy();
         }
 
-        public void Hide() {
+        public virtual void Hide() {
             _visible = false;
             _form.Hide();
         }
 
-        public void Show() {
+        public virtual void Show() {
             _visible = true;
         }
 

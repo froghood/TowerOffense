@@ -80,8 +80,13 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
                 if (_entityManager.RemainingEnemies == 0) {
                     _waveInProgress = false;
-                    _wave++;
-                    OpenShop();
+                    if (_wave >= 10) {
+
+                    } else {
+                        _wave++;
+                        OpenShop();
+                    }
+
                 }
             }
 

@@ -24,7 +24,7 @@ namespace TowerOffense.Objects.Towers {
             Range = 240f;
             AttackSpeed = 0.25f;
             Damage = 0.5f;
-            SellPrice = 8;
+            SellPrice = 5;
         }
 
         public override void Update(GameTime gameTime) {
@@ -32,8 +32,8 @@ namespace TowerOffense.Objects.Towers {
             _enemiesInRange = GetEnemiesInRange();
             _targetedEnemies = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).ToList();
 
-            if (State == TowerState.Idle && _targetedEnemies.Count > 0 && !TOGame.Player.Dead) ChangeState(TowerState.Attacking);
-            else if (State == TowerState.Attacking && (_targetedEnemies.Count == 0 || TOGame.Player.Dead)) ChangeState(TowerState.Idle);
+            if (State == TowerState.Idle && _targetedEnemies.Count > 0 && !TOGame.Player.RunFinished) ChangeState(TowerState.Attacking);
+            else if (State == TowerState.Attacking && (_targetedEnemies.Count == 0 || TOGame.Player.RunFinished)) ChangeState(TowerState.Idle);
 
             switch (State) {
                 case TowerState.Idle:

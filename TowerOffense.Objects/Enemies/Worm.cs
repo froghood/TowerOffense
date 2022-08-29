@@ -128,7 +128,7 @@ namespace TowerOffense.Objects.Enemies {
             switch (State) {
                 case EnemyState.Active:
                     if (StateTime >= ActiveDuration) {
-                        if (!TOGame.Player.Dead) ChangeState(EnemyState.Attacking, AttackingDuration);
+                        if (!TOGame.Player.RunFinished) ChangeState(EnemyState.Attacking, AttackingDuration);
                     }
                     break;
                 case EnemyState.Attacking:

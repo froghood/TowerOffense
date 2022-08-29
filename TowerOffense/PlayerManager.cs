@@ -6,26 +6,34 @@ namespace TowerOffense {
     public class PlayerManager {
         public int Health { get; private set; }
         public int Money { get; private set; }
-        public bool Dead { get => _dead; }
+        public bool RunFinished { get => _runFinished; }
 
-        private bool _dead;
 
+        private bool _runFinished;
+
+        public event EventHandler OnWin;
         public event EventHandler OnDeath;
 
         public void Damage(int amount) {
             Health = Math.Max(0, Health - amount);
             System.Console.WriteLine(Health);
-            if (Health == 0 && !_dead) {
+            if (Health == 0 && !_runFinished) {
+                _runFinished = true;
                 OnDeath?.Invoke(this, EventArgs.Empty);
-                _dead = true;
+
             }
+        }
+
+        public void Win() {
+            _runFinished = true;
+            OnWin?.Invoke(this, EventArgs.Empty);
         }
 
         public void Restart(int startingHealth, int startingMoney) {
             Health = startingHealth;
             System.Console.WriteLine(Health);
             Money = startingMoney;
-            _dead = false;
+            _runFinished = false;
         }
 
         public void Pay(int amount) {

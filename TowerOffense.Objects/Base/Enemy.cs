@@ -106,7 +106,7 @@ namespace TowerOffense.Objects.Base {
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Pixelfont");
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
-            if (State != EnemyState.Attacking && !TOGame.Player.Dead && !_statePaused) {
+            if (State != EnemyState.Attacking && !TOGame.Player.RunFinished && !_statePaused) {
                 TOGame.SpriteBatch.Draw(Pixel,
                 new Rectangle(
                     InnerWindowOffset.ToPoint(),

@@ -5,6 +5,7 @@ namespace TowerOffense.Scenes.Title {
     public class TitleScene : Scene {
 
         private TitleWindow _titleWindow;
+        private CreditsWindow _creditsWindow;
 
         public TitleScene() : base() {
             _titleWindow = new TitleWindow(this);

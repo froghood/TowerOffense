@@ -29,6 +29,14 @@ namespace TowerOffense.Scenes.Gameplay {
                 AddObject(gameOverWindow);
             };
 
+            TOGame.Player.OnWin += (_, _) => {
+                var gameOverWindow = new GameOverWindow(this);
+                gameOverWindow.Closed += (_, _) => {
+                    TOGame.Scenes.PopScene();
+                };
+                AddObject(gameOverWindow);
+            };
+
             AddObject(_entityManager);
             AddObject(_waveManager);
 

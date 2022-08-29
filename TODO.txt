@@ -4,7 +4,7 @@
     - restart/menu
     - sound
 ✓ hud color changes
-* worm enemy
+✓ worm enemy
 ✓ electro target healthy
 * waves
 ✓ better title screen

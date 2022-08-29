@@ -73,36 +73,30 @@
         ]
     },
     "6": {
-        "Portals": 2,
-        "SpawnGroups": [
-            {
-                "Enemy": "Beetle",
-                "StartTime": 1.5,
-                "Amount": 3,
-                "Interval": 3
-            },
-            {
-                "Enemy": "Worm",
-                "StartTime": 3.5,
-                "Amount": 1,
-                "Interval": 1
-            }
-        ]
-    },
-    "7": {
         "Portals": 3,
         "SpawnGroups": [
             {
                 "Enemy": "Beetle",
                 "StartTime": 1.5,
-                "Amount": 4,
+                "Amount": 3,
                 "Interval": 5
             },
             {
                 "Enemy": "Spider",
                 "StartTime": 2.5,
-                "Amount": 4,
+                "Amount": 3,
                 "Interval": 5
+            }
+        ]
+    },
+    "7": {
+        "Portals": 2,
+        "SpawnGroups": [
+            {
+                "Enemy": "Beetle",
+                "StartTime": 1.5,
+                "Amount": 4,
+                "Interval": 3
             }
         ]
     },
@@ -113,7 +107,41 @@
                 "Enemy": "Spider",
                 "StartTime": 1.5,
                 "Amount": 15,
-                "Interval": 0.3
+                "Interval": 0.1
+            }
+        ]
+    },
+    "9": {
+        "Portals": 3,
+        "SpawnGroups": [
+            {
+                "Enemy": "Spider",
+                "StartTime": 1.5,
+                "Amount": 5,
+                "Interval": 0
+            },
+            {
+                "Enemy": "Beetle",
+                "StartTime": 4,
+                "Amount": 3,
+                "Interval": 0
+            },
+            {
+                "Enemy": "Worm",
+                "StartTime": 6.5,
+                "Amount": 1,
+                "Interval": 0
+            }
+        ]
+    },
+    "10": {
+        "Portals": 5,
+        "SpawnGroups": [
+            {
+                "Enemy": "Worm",
+                "StartTime": 2.5,
+                "Amount": 5,
+                "Interval": 0.5
             }
         ]
     }

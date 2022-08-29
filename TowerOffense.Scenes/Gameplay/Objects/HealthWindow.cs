@@ -25,7 +25,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         public override void Render(GameTime gameTime) {
 
-            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures["Sprites/Heart"], InnerWindowOffset + Vector2.One * 8f, TitleBarColor);
+            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures["Sprites/Heart"], InnerWindowOffset + Vector2.One * 8f, new Color(128, 140, 160));
 
             TOGame.SpriteBatch.Draw(
                 Pixel,
