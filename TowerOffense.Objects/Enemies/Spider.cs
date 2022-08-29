@@ -15,7 +15,7 @@ namespace TowerOffense.Objects.Enemies {
         private const int DamageAmount = 2;
         private float _moveTime;
         private Vector2 _velocity;
-        private float _speed = 300;
+        private float _speed = 400;
         private float _angle;
 
         private Random _random;
@@ -38,6 +38,7 @@ namespace TowerOffense.Objects.Enemies {
 
             MaxHealth = 5f;
             Health = MaxHealth;
+            Prize = 2;
 
             Damaged += (sender, amount) => {
                 if (Health - amount <= 0f) {
@@ -46,12 +47,16 @@ namespace TowerOffense.Objects.Enemies {
             };
 
             StateChanged += (sender, state) => {
-
                 switch (state) {
                     case EnemyState.Active:
-                        _speed = 200;
+                        _speed = 400;
                         if (State == EnemyState.Neutralized) Health = MaxHealth;
-                        if (State == EnemyState.Attacking) TOGame.PlayerManager.Damage(DamageAmount);
+                        if (State == EnemyState.Attacking) {
+                            TOGame.PlayerManager.Damage(DamageAmount);
+                            var sound = TOGame.Assets.Sounds["Sounds/SpiderBite"].CreateInstance();
+                            sound.Volume = 0.1f;
+                            sound.Play();
+                        }
                         break;
                     case EnemyState.Attacking:
                         _speed = 0;

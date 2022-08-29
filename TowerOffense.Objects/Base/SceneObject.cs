@@ -6,7 +6,7 @@ namespace TowerOffense.Objects.Base {
 
         public bool IsDestroyed { get; private set; }
 
-        protected Scene Scene;
+        public Scene Scene { get; protected set; }
 
         public SceneObject(Scene scene) {
             Scene = scene;

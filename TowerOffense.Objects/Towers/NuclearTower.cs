@@ -23,8 +23,8 @@ namespace TowerOffense.Objects.Towers {
 
             Range = 240f;
             AttackSpeed = 0.25f;
-            Damage = 0.333f;
-            SellPrice = 1;
+            Damage = 0.3f;
+            SellPrice = 8;
         }
 
         public override void Update(GameTime gameTime) {
@@ -44,6 +44,9 @@ namespace TowerOffense.Objects.Towers {
                         foreach (var enemy in _targetedEnemies) {
                             enemy.Damage(this, Damage);
                         }
+                        var sound = TOGame.Assets.Sounds["Sounds/NuclearTowerAttack"].CreateInstance();
+                        sound.Volume = TOGame.Settings.Volume;
+                        sound.Play();
                     }
                     break;
             }
@@ -54,6 +57,23 @@ namespace TowerOffense.Objects.Towers {
         }
 
         public override void Render(GameTime gameTime) {
+
+            string texture = "";
+            int frame = 0;
+
+            switch (State) {
+                case TowerState.Idle:
+                    frame = Convert.ToInt32(StateTime) % 2;
+                    texture = $"Sprites/NuclearTower{frame + 1}";
+                    break;
+                case TowerState.Attacking:
+                    frame = Convert.ToInt32(StateTime * 5) % 2;
+                    texture = $"Sprites/NuclearTowerAttack{frame + 1}";
+                    break;
+            }
+
+            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures[texture], InnerWindowOffset, Color.White);
+
             base.Render(gameTime);
         }
     }

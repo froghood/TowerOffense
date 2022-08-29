@@ -73,7 +73,7 @@ namespace TowerOffense.Objects.Base {
             }
         }
 
-        protected Texture2D Pixel { get => _pixel; }
+        public Texture2D Pixel { get => _pixel; }
 
         public event EventHandler Closed;
 
@@ -84,8 +84,6 @@ namespace TowerOffense.Objects.Base {
 
         private int _titleBarHeight;
         private int _borderThickness;
-
-        private bool _mouseHovering;
 
         private bool _isBeingDragged;
         private Point _dragOffset;
@@ -123,6 +121,8 @@ namespace TowerOffense.Objects.Base {
             _form.ShowIcon = false;
             _form.ControlBox = false;
             _form.TopMost = true;
+            _form.Focus();
+
 
             _titleBarHeight = titleBarHeight;
             _borderThickness = borderThickness;
@@ -165,10 +165,9 @@ namespace TowerOffense.Objects.Base {
 
         public override void Update(GameTime gameTime) {
 
-            _mouseHovering = false;
-
             // window dragging & close button
             if (!Draggable) _isBeingDragged = false;
+
 
             _closeIsHovered = (MouseHovering &&
                 MouseState.X >= _closeBounds.Left - 1 && MouseState.X < _closeBounds.Right + 1 &&
@@ -177,7 +176,7 @@ namespace TowerOffense.Objects.Base {
             switch (MouseState.LeftButton) {
                 case ButtonState.Pressed:
                     // ensures only the first frame of ButtonState.Pressed gets through
-                    if (!Focused || _mousePressedFlag) break;
+                    if (!MouseHovering || _mousePressedFlag) break;
 
                     // true if the close button is being hovered but is not already being pressed or the window is being dragged
                     if (!_closeIsPressed && !_isBeingDragged && _closeIsHovered) _closeIsPressed = true;

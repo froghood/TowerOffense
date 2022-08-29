@@ -13,7 +13,7 @@ using TowerOffense.Objects.Enemies;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace TowerOffense.Scenes.Gameplay.Objects {
-    public class WaveManager : SceneWindow {
+    public class WaveManager : TowerOffense.Objects.Base.SceneWindow {
 
         public int Wave { get => _wave; }
 
@@ -40,7 +40,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
             ClearColor = new Color(104, 66, 74);
             TitleBarColor = new Color(186, 120, 93);
             FocusedBorderColor = TitleBarColor;
-            BorderColor = FocusedBorderColor * 0.5f;
+            BorderColor = new Color();
 
             _entityManager = entityManager;
             string wavesJsonRaw = File.ReadAllText(wavesJsonPath);
@@ -110,7 +110,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         }
 
         public void OpenShop() {
-            var _shopWindow = new ShopWindow(Scene, _entityManager, this, new Vector2(300, 300), new Point(360, 240));
+            var _shopWindow = new Shop.Shop(Scene, _entityManager, this);
             _shopWindow.Closed += (_, _) => {
                 NextWave();
                 Show();

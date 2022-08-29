@@ -20,7 +20,7 @@ namespace TowerOffense.Scenes.Gameplay {
 
         public override void Initialize() {
 
-            TOGame.PlayerManager.Restart(100, 3);
+            TOGame.PlayerManager.Restart(100, 100);
             TOGame.PlayerManager.OnDeath += (_, _) => {
                 AddObject(new GameOverWindow(this));
             };
@@ -30,10 +30,6 @@ namespace TowerOffense.Scenes.Gameplay {
 
             AddObject(new HealthWindow(this));
             AddObject(new MoneyWindow(this));
-
-            AddObject(_entityManager.CreateTower<GravityTower>(new Vector2(20, 20)));
-            AddObject(_entityManager.CreateTower<ElectroTower>(new Vector2(40, 40)));
-            AddObject(_entityManager.CreateTower<NuclearTower>(new Vector2(60, 60)));
 
             _waveManager.OpenShop();
         }

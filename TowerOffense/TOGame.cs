@@ -10,6 +10,9 @@ using System;
 using TowerOffense.Scenes;
 using Microsoft.Xna.Framework.Content;
 using TowerOffense.Extensions;
+using System.IO;
+using Microsoft.Xna.Framework.Audio;
+using Newtonsoft.Json;
 
 namespace TowerOffense {
     public class TOGame : Game {
@@ -21,6 +24,7 @@ namespace TowerOffense {
         public static SpriteBatch SpriteBatch { get => Instance._spriteBatch; }
         public static Random Random { get => Instance._random; }
         public static PlayerManager PlayerManager { get => Instance._playerManager; }
+        public static Settings Settings { get => Instance._settings; }
 
         public static Point DisplaySize {
             get => new Point() {
@@ -36,6 +40,7 @@ namespace TowerOffense {
         private SpriteBatch _spriteBatch;
         private Random _random;
         private PlayerManager _playerManager;
+        private Settings _settings;
 
         public TOGame() : base() {
 
@@ -78,33 +83,19 @@ namespace TowerOffense {
         protected override void LoadContent() {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // prob should make something more dynamic
-            _assets.LoadTexture("Sprites/Title");
-            _assets.LoadTexture("Sprites/PlayButton");
-            _assets.LoadTexture("Sprites/PlayButtonHover");
-            _assets.LoadTexture("Sprites/Close");
-            _assets.LoadTexture("Sprites/TowerTargetArrow");
-            _assets.LoadTexture("Sprites/Heart");
+            var settingsJson = File.ReadAllText("./Settings.json");
+            _settings = JsonConvert.DeserializeObject<Settings>(settingsJson);
 
-            //gravity
-            _assets.LoadTexture("Sprites/GravityTower1");
-            _assets.LoadTexture("Sprites/GravityTower2");
-            _assets.LoadTexture("Sprites/GravityTowerAttack");
+            // sprites
+            foreach (var path in Directory.GetFiles("./Content/Sprites", "*.png")) {
+                System.Console.WriteLine(path);
+                _assets.LoadTexture($"Sprites/{Path.GetFileNameWithoutExtension(path)}");
+            }
 
-            //particles
-            _assets.LoadTexture("Sprites/HitParticle1");
-            _assets.LoadTexture("Sprites/HitParticle2");
-            _assets.LoadTexture("Sprites/HitParticle3");
-
-            //spider
-            _assets.LoadTexture("Sprites/SpiderActive1");
-            _assets.LoadTexture("Sprites/SpiderActive2");
-            _assets.LoadTexture("Sprites/SpiderStartup");
-            _assets.LoadTexture("Sprites/SpiderAttack1");
-            _assets.LoadTexture("Sprites/SpiderAttack2");
-            _assets.LoadTexture("Sprites/SpiderAttack3");
-            _assets.LoadTexture("Sprites/SpiderNeutralized1");
-            _assets.LoadTexture("Sprites/SpiderNeutralized2");
+            // sounds
+            foreach (var path in Directory.GetFiles("./Content/Sounds", "*.mp3")) {
+                _assets.LoadSound($"Sounds/{Path.GetFileNameWithoutExtension(path)}");
+            }
 
             base.LoadContent();
         }

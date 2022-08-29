@@ -25,7 +25,7 @@ namespace TowerOffense.Objects.Towers {
             Range = float.MaxValue;
             AttackSpeed = 0.25f;
             Damage = 0.5f;
-            SellPrice = 1;
+            SellPrice = 4;
         }
 
         public override void Update(GameTime gameTime) {
@@ -52,7 +52,11 @@ namespace TowerOffense.Objects.Towers {
                         foreach (var enemy in _targetedEnemies) {
 
                             enemy.Damage(this, Damage);
+
                         }
+                        var sound = TOGame.Assets.Sounds["Sounds/GravityTowerAttack"].CreateInstance();
+                        sound.Volume = TOGame.Settings.Volume;
+                        sound.Play();
                     }
                     break;
                 case TowerState.Attacking:

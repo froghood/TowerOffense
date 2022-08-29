@@ -7,7 +7,11 @@ using TowerOffense.Objects.Base;
 namespace TowerOffense.Objects.Common {
     public class Button : WindowObject {
 
-        public bool Hovering { get => _isHovering; }
+        public bool Hovering {
+            get => (SceneWindow.MouseHovering &&
+            SceneWindow.MouseInnerPosition.X >= Bounds.Left && SceneWindow.MouseInnerPosition.X < Bounds.Right &&
+            SceneWindow.MouseInnerPosition.Y >= Bounds.Top && SceneWindow.MouseInnerPosition.Y < Bounds.Bottom);
+        }
         public Rectangle Bounds { get; set; }
         public Texture2D Texture { get; set; }
         public Texture2D HoverTexture { get; set; }
@@ -25,20 +29,18 @@ namespace TowerOffense.Objects.Common {
 
         public override void Update(GameTime gameTime) {
 
-            _isHovering = (SceneWindow.MouseHovering &&
-            SceneWindow.MouseInnerPosition.X >= Bounds.Left && SceneWindow.MouseInnerPosition.X < Bounds.Right &&
-            SceneWindow.MouseInnerPosition.Y >= Bounds.Top && SceneWindow.MouseInnerPosition.Y < Bounds.Bottom);
-
-            if (_isHovering && SceneWindow.MouseState.LeftButton == ButtonState.Pressed && _previousMouseButtonState == ButtonState.Released) {
+            if (Hovering && SceneWindow.MouseState.LeftButton == ButtonState.Pressed && _previousMouseButtonState == ButtonState.Released) {
                 Clicked?.Invoke(this, EventArgs.Empty);
             }
+
+            _previousMouseButtonState = SceneWindow.MouseState.LeftButton;
 
             base.Update(gameTime);
         }
 
         public override void Render(GameTime gameTime) {
 
-            SceneWindow.Draw(_isHovering ? HoverTexture : Texture, Bounds.Location.ToVector2(), Color.White);
+            SceneWindow.Draw(Hovering ? HoverTexture : Texture, Bounds.Location.ToVector2(), Color.White);
 
             base.Render(gameTime);
         }

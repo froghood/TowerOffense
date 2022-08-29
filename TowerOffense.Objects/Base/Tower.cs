@@ -40,7 +40,7 @@ namespace TowerOffense.Objects.Base {
             borderThickness) {
 
             Closed += (_, _) => {
-                TOGame.PlayerManager.Reward(SellPrice);
+                TOGame.PlayerManager.Pay(SellPrice);
             };
         }
 
@@ -57,7 +57,7 @@ namespace TowerOffense.Objects.Base {
         public void ChangeState(TowerState towerState) {
             StateChanged?.Invoke(this, towerState);
             _state = towerState;
-            _stateTime = 0f;
+            _stateTime = TOGame.Random.NextSingle() * 0.1f - 0.05f;
         }
 
         public override void Update(GameTime gameTime) {

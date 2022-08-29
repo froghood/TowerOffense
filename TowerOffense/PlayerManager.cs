@@ -26,8 +26,12 @@ namespace TowerOffense {
             Money = startingMoney;
         }
 
-        internal void Reward(int rewardAmount) {
-            Money += rewardAmount;
+        public void Pay(int amount) {
+            Money += amount;
+        }
+
+        public void Charge(int amount) {
+            Money -= amount;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace TowerOffense.Objects.Base {
 
         protected float MaxHealth { get; set; }
         protected float Health { get; set; }
-        protected int RewardAmount { get; set; } = 1;
+        protected int Prize { get; set; } = 1;
 
         private float _stateTime;
         private float _stateDuration;
@@ -48,7 +48,7 @@ namespace TowerOffense.Objects.Base {
             };
 
             Closed += (_, _) => {
-                TOGame.PlayerManager.Reward(RewardAmount);
+                TOGame.PlayerManager.Pay(Prize);
             };
 
             Draggable = false;

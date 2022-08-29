@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
@@ -23,7 +25,7 @@ namespace TowerOffense.Objects.Towers {
             Range = 360f;
             AttackSpeed = 0.5f;
             Damage = 2.5f;
-            SellPrice = 1;
+            SellPrice = 7;
         }
 
         public override void Update(GameTime gameTime) {
@@ -33,8 +35,7 @@ namespace TowerOffense.Objects.Towers {
             var first = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).FirstOrDefault();
 
             _targetedEnemies = (first != null) ?
-            new List<Enemy> { first } :
-            new List<Enemy>();
+                new List<Enemy> { first } : new List<Enemy>();
 
             switch (State) {
                 case TowerState.Idle:
@@ -44,10 +45,13 @@ namespace TowerOffense.Objects.Towers {
 
                             enemy.Damage(this, Damage);
                         }
+                        var sound = TOGame.Assets.Sounds["Sounds/ElectroTowerAttack"].CreateInstance();
+                        sound.Volume = TOGame.Settings.Volume;
+                        sound.Play();
                     }
                     break;
                 case TowerState.Attacking:
-                    if (StateTime >= 0.25f) {
+                    if (StateTime >= 0.5f) {
                         ChangeState(TowerState.Idle);
                     }
                     break;
@@ -57,6 +61,24 @@ namespace TowerOffense.Objects.Towers {
         }
 
         public override void Render(GameTime gameTime) {
+
+            string texture = "";
+            int frame = 0;
+
+            switch (State) {
+                case TowerState.Idle:
+                    frame = Convert.ToInt32(StateTime * 2f) % 2;
+                    texture = $"Sprites/ElectroTower{frame + 1}";
+                    break;
+                case TowerState.Attacking:
+                    frame = Convert.ToInt32(StateTime * 2) % 2;
+                    texture = $"Sprites/ElectroTowerAttack{frame + 1}";
+                    break;
+            }
+
+
+            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures[texture], InnerWindowOffset, Color.White);
+
             base.Render(gameTime);
         }
     }

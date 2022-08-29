@@ -3,7 +3,7 @@ using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 
 namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
-    public class GameOverWindow : SceneWindow {
+    public class GameOverWindow : TowerOffense.Objects.Base.SceneWindow {
 
         public GameOverWindow(Scene scene) : base(scene, new Point(300, 300)) {
 
