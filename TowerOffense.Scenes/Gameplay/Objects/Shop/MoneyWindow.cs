@@ -19,7 +19,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
         public override void Render(GameTime gameTime) {
 
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
-            string text = $"${TOGame.PlayerManager.Money}";
+            string text = $"${TOGame.Player.Money}";
             var fontSize = spriteFont.MeasureString(text);
 
             TOGame.SpriteBatch.DrawString(spriteFont,

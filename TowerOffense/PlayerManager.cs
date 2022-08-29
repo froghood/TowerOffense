@@ -6,6 +6,7 @@ namespace TowerOffense {
     public class PlayerManager {
         public int Health { get; private set; }
         public int Money { get; private set; }
+        public bool Dead { get => _dead; }
 
         private bool _dead;
 
@@ -24,6 +25,7 @@ namespace TowerOffense {
             Health = startingHealth;
             System.Console.WriteLine(Health);
             Money = startingMoney;
+            _dead = false;
         }
 
         public void Pay(int amount) {

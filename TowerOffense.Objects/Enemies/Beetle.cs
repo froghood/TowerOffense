@@ -1,44 +1,43 @@
 using System;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Extensions;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
-using TowerOffense.Scenes.Gameplay.Objects;
 
 namespace TowerOffense.Objects.Enemies {
-    public class Spider : Enemy {
-        private const float ActiveDuration = 10f;
-        private const float AttackingDuration = 1.25f;
-        private const float NeutralizedDuration = 8f;
-        private const int DamageAmount = 2;
-        private float _moveTime;
-        private Vector2 _velocity;
-        private float _speed = 400;
+    public class Beetle : Enemy {
+
+        private const float ActiveDuration = 18f;
+        private const float AttackingDuration = 2.25f;
+        private const float NeutralizedDuration = 12f;
+        private const int DamageAmount = 10;
+
+        private float _time;
         private float _angle;
+        private float _speed = 80f;
 
-        private Random _random;
+        private FastNoiseLite _noise;
+        private Vector2 _velocity;
 
-        public Spider(
+        public Beetle(
             Scene scene,
             EntityManager entityManager,
-            Vector2 position,
-            bool fromPortal
-        ) : base(
-            scene,
-            entityManager,
-            new Point(60, 60),
-            position,
-            fromPortal
-        ) {
+            Vector2? position = null,
+            bool fromPortal = true)
+            : base(
+                scene,
+                entityManager,
+                new Point(120, 120),
+                position,
+                fromPortal) {
 
-            _random = new Random();
-            _angle = _random.NextSingle() * MathF.Tau;
-
-            MaxHealth = 5f;
+            MaxHealth = 80f;
             Health = MaxHealth;
-            Prize = 1;
+            Prize = 8;
+
+            _noise = new FastNoiseLite();
+            _noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
 
             Damaged += (sender, amount) => {
                 if (Health - amount <= 0f) {
@@ -49,12 +48,12 @@ namespace TowerOffense.Objects.Enemies {
             StateChanged += (sender, state) => {
                 switch (state) {
                     case EnemyState.Active:
-                        _speed = 400;
+                        _speed = 80f;
                         if (State == EnemyState.Neutralized) Health = MaxHealth;
                         if (State == EnemyState.Attacking) {
                             TOGame.Player.Damage(DamageAmount);
-                            var sound = TOGame.Assets.Sounds["Sounds/SpiderBite"].CreateInstance();
-                            sound.Volume = 0.1f;
+                            var sound = TOGame.Assets.Sounds["Sounds/BeetleBite"].CreateInstance();
+                            sound.Volume = TOGame.Settings.Volume;
                             sound.Play();
                         }
                         break;
@@ -67,13 +66,14 @@ namespace TowerOffense.Objects.Enemies {
                 }
             };
 
-            ChangeState(EnemyState.Active, 10f);
+            ChangeState(EnemyState.Active, ActiveDuration);
+
+
         }
 
         public override void Update(GameTime gameTime) {
 
             var deltaTime = gameTime.DeltaTime();
-
 
             switch (State) {
                 case EnemyState.Active:
@@ -95,19 +95,16 @@ namespace TowerOffense.Objects.Enemies {
 
             if (State == EnemyState.Active) {
 
-                _moveTime += deltaTime;
+                _time += deltaTime;
 
-                while (_moveTime > 1) {
-                    _moveTime -= 1;
-                    _angle = new Random().NextSingle() * MathF.Tau;
-                }
+                _angle = MathF.Atan2(_noise.GetNoise(_time * 5f, 0), _noise.GetNoise(0, _time * 5f));
 
-
+                _time += deltaTime;
 
                 _velocity = new Vector2() {
                     X = MathF.Cos(_angle) * _speed * deltaTime,
                     Y = MathF.Sin(_angle) * _speed * deltaTime
-                } * (MathF.Floor(_moveTime * 2f + 1f) % 2f);
+                };
 
                 Position += _velocity;
             }
@@ -123,18 +120,18 @@ namespace TowerOffense.Objects.Enemies {
             switch (State) {
                 case EnemyState.Active:
                     frame = Convert.ToInt32(StateTime * 4f) % 2;
-                    sprite = $"Sprites/SpiderActive{frame + 1}";
+                    sprite = $"Sprites/BeetleActive{frame + 1}";
                     break;
                 case EnemyState.Attacking:
-                    if (StateTime < 1) sprite = $"Sprites/SpiderStartup";
+                    if (StateTime < 2) sprite = $"Sprites/BeetleStartup";
                     else {
-                        frame = Math.Min(Convert.ToInt32((StateTime - 1) * 12f), 2);
-                        sprite = $"Sprites/SpiderAttack{frame + 1}";
+                        frame = Math.Min(Convert.ToInt32((StateTime - 2) * 12f), 2);
+                        sprite = $"Sprites/BeetleAttack{frame + 1}";
                     }
                     break;
                 case EnemyState.Neutralized:
                     frame = Convert.ToInt32(StateTime * 2f) % 2;
-                    sprite = $"Sprites/SpiderNeutralized{frame + 1}";
+                    sprite = $"Sprites/BeetleNeutralized{frame + 1}";
                     break;
             }
 

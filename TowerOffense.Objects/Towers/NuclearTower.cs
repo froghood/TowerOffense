@@ -32,15 +32,15 @@ namespace TowerOffense.Objects.Towers {
             _enemiesInRange = GetEnemiesInRange();
             _targetedEnemies = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).ToList();
 
-            if (State == TowerState.Idle && _targetedEnemies.Count > 0) ChangeState(TowerState.Attacking);
-            else if (State == TowerState.Attacking && _targetedEnemies.Count == 0) ChangeState(TowerState.Idle);
+            if (State == TowerState.Idle && _targetedEnemies.Count > 0 && !TOGame.Player.Dead) ChangeState(TowerState.Attacking);
+            else if (State == TowerState.Attacking && (_targetedEnemies.Count == 0 || TOGame.Player.Dead)) ChangeState(TowerState.Idle);
 
             switch (State) {
                 case TowerState.Idle:
                     break;
                 case TowerState.Attacking:
                     if (_attackTimer >= AttackSpeed) {
-                        _attackTimer -= AttackSpeed;
+                        _attackTimer -= AttackSpeed + TOGame.Random.NextSingle() * 0.05f - 0.025f;
                         foreach (var enemy in _targetedEnemies) {
                             enemy.Damage(this, Damage);
                         }

@@ -20,6 +20,7 @@ namespace TowerOffense.Scenes {
 
         public void PopScene() {
             TOGame.Command(() => {
+                CurrentScene.Terminate();
                 _scenes.Pop();
                 CurrentScene.Reactivate();
             });

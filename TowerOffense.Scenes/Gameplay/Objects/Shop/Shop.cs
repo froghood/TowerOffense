@@ -42,7 +42,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 _entityManager,
                 new Rectangle((InnerWindowOffset + new Vector2(170, 50)).ToPoint(), new Point(150, 150)),
                 typeof(ElectroTower),
-                14,
+                10,
                 "Electro",
                 new[] { "average range", "targets healthy enemies", "high damage" },
                 TitleBarColor = new Color(167, 236, 255));
@@ -53,7 +53,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 _entityManager,
                 new Rectangle((InnerWindowOffset + new Vector2(330, 50)).ToPoint(), new Point(150, 150)),
                 typeof(NuclearTower),
-                16,
+                12,
                 "Nuclear",
                 new[] { "short range", "targets multiple enemies", "high group damage" },
                 TitleBarColor = new Color(160, 255, 150));

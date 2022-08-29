@@ -23,7 +23,7 @@ namespace TowerOffense {
         public static SceneManager Scenes { get => Instance._scenes; }
         public static SpriteBatch SpriteBatch { get => Instance._spriteBatch; }
         public static Random Random { get => Instance._random; }
-        public static PlayerManager PlayerManager { get => Instance._playerManager; }
+        public static PlayerManager Player { get => Instance._playerManager; }
         public static Settings Settings { get => Instance._settings; }
 
         public static Point DisplaySize {

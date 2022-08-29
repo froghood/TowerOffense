@@ -12,14 +12,10 @@ namespace TowerOffense.Objects.Common {
             Scene scene,
             EntityManager entityManager,
             Point size,
-            Vector2? position = null,
-            int titleBarHeight = 24,
-            int borderThickness = 1) : base(
+            Vector2? position = null) : base(
                 scene,
                 size,
-                position,
-                titleBarHeight,
-                borderThickness) {
+                position) {
             _entityManager = entityManager;
         }
     }

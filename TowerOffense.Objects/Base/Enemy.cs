@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TowerOffense.Extensions;
@@ -11,6 +12,7 @@ namespace TowerOffense.Objects.Base {
 
         public EnemyState State { get => _enemyState; }
         public float StateTime { get => _stateTime; }
+        public float StateDuration { get => _stateDuration; }
 
         protected float MaxHealth { get; set; }
         protected float Health { get; set; }
@@ -29,16 +31,12 @@ namespace TowerOffense.Objects.Base {
             EntityManager entityManager,
             Point size,
             Vector2? position = null,
-            bool fromPortal = true,
-            int titleBarHeight = 24,
-            int borderThickness = 1
+            bool fromPortal = true
         ) : base(
             scene,
             entityManager,
             size,
-            position,
-            titleBarHeight,
-            borderThickness) {
+            position) {
 
             if (fromPortal) Position -= InnerWindowCenterOffset;
 
@@ -48,7 +46,7 @@ namespace TowerOffense.Objects.Base {
             };
 
             Closed += (_, _) => {
-                TOGame.PlayerManager.Pay(Prize);
+                TOGame.Player.Pay(Prize);
             };
 
             Draggable = false;
@@ -105,26 +103,15 @@ namespace TowerOffense.Objects.Base {
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Pixelfont");
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
-            if (State != EnemyState.Attacking) {
+            if (State != EnemyState.Attacking && !TOGame.Player.Dead) {
                 TOGame.SpriteBatch.Draw(Pixel,
                 new Rectangle(
                     InnerWindowOffset.ToPoint(),
                     new Point((int)((float)InnerSize.X * (_stateTime / _stateDuration)), 2)),
                 Color.White);
+            }
 
-                // TOGame.SpriteBatch.DrawString(
-                //     spriteFont,
-                //     text,
-                //     (State == EnemyState.Active) ?
-                //         InnerWindowOffset + Vector2.UnitX * 2 - Offset :
-                //         InnerWindowOffset + Vector2.UnitX * (Size.X - spriteFont.MeasureString(text).X - BorderThickness) - Offset,
-                //     Color.White,
-                //     0f,
-                //     Vector2.One,
-                //     1f,
-                //     SpriteEffects.None,
-                //     0f);
-            } else {
+            if (State == EnemyState.Attacking) {
                 var colorMod = (MathF.Sin(StateTime * 28f) + 1f) / 3f;
                 TitleBarColor = new Color(1f, colorMod, colorMod);
                 FocusedBorderColor = TitleBarColor;
@@ -163,6 +150,16 @@ namespace TowerOffense.Objects.Base {
             _enemyState = enemyState;
             _stateTime = 0f;
             _stateDuration = duration;
+        }
+
+        public List<Tower> GetTowersInRange(float range) {
+            return _entityManager.GetTowers().Select(tower => {
+                var manhattanDistance =
+                (tower.Position + tower.InnerWindowCenterOffset) -
+                (Position + InnerWindowCenterOffset);
+                var distance = MathF.Sqrt(manhattanDistance.X * manhattanDistance.X + manhattanDistance.Y * manhattanDistance.Y);
+                return (Tower: tower, Distance: distance);
+            }).Where(e => e.Distance <= range).OrderBy(e => e.Distance).Select(e => e.Tower).ToList();
         }
 
         protected event EventHandler<EnemyState> StateChanged;

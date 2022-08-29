@@ -72,5 +72,6 @@ namespace TowerOffense.Scenes {
         public virtual void Initialize() { }
         public virtual void Reactivate() { }
         public virtual void Deactivate() { }
+        public virtual void Terminate() { }
     }
 }

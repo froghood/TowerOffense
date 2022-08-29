@@ -20,9 +20,13 @@ namespace TowerOffense.Scenes.Gameplay {
 
         public override void Initialize() {
 
-            TOGame.PlayerManager.Restart(100, 100);
-            TOGame.PlayerManager.OnDeath += (_, _) => {
-                AddObject(new GameOverWindow(this));
+            TOGame.Player.Restart(100, 15);
+            TOGame.Player.OnDeath += (_, _) => {
+                var gameOverWindow = new GameOverWindow(this);
+                gameOverWindow.Closed += (_, _) => {
+                    TOGame.Scenes.PopScene();
+                };
+                AddObject(gameOverWindow);
             };
 
             AddObject(_entityManager);
@@ -40,6 +44,10 @@ namespace TowerOffense.Scenes.Gameplay {
 
         public override void Reactivate() {
 
+        }
+
+        public override void Terminate() {
+            foreach (var sceneWindow in SceneWindows) sceneWindow.Close();
         }
     }
 }

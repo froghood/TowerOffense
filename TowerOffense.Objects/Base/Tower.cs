@@ -28,19 +28,14 @@ namespace TowerOffense.Objects.Base {
         public Tower(Scene scene,
             EntityManager entityManager,
             Point size,
-            bool center = false,
-            Vector2? position = null,
-            int titleBarHeight = 24,
-            int borderThickness = 1) : base(
+            Vector2? position) : base(
             scene,
             entityManager,
             size,
-            position,
-            titleBarHeight,
-            borderThickness) {
+            position) {
 
             Closed += (_, _) => {
-                TOGame.PlayerManager.Pay(SellPrice);
+                TOGame.Player.Pay(SellPrice);
             };
         }
 

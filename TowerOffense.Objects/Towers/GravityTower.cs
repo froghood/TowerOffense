@@ -37,7 +37,7 @@ namespace TowerOffense.Objects.Towers {
                 .OrderByDescending(enemy => enemy.StateTime)
                 .Concat(_enemiesInRange
                     .Where(enemy => enemy.State == EnemyState.Active)
-                    .OrderByDescending(enemy => enemy.StateTime)).ToList();
+                    .OrderBy(enemy => enemy.StateDuration - enemy.StateTime)).ToList();
 
             var first = enemiesByThreat.FirstOrDefault();
 
@@ -48,15 +48,17 @@ namespace TowerOffense.Objects.Towers {
             switch (State) {
                 case TowerState.Idle:
                     if (StateTime >= AttackSpeed && _targetedEnemies.Count > 0) {
-                        ChangeState(TowerState.Attacking);
-                        foreach (var enemy in _targetedEnemies) {
+                        if (!TOGame.Player.Dead) {
+                            ChangeState(TowerState.Attacking);
+                            foreach (var enemy in _targetedEnemies) {
 
-                            enemy.Damage(this, Damage);
+                                enemy.Damage(this, Damage);
 
+                            }
+                            var sound = TOGame.Assets.Sounds["Sounds/GravityTowerAttack"].CreateInstance();
+                            sound.Volume = TOGame.Settings.Volume;
+                            sound.Play();
                         }
-                        var sound = TOGame.Assets.Sounds["Sounds/GravityTowerAttack"].CreateInstance();
-                        sound.Volume = TOGame.Settings.Volume;
-                        sound.Play();
                     }
                     break;
                 case TowerState.Attacking:

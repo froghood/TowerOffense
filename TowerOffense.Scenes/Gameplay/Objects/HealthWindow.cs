@@ -29,7 +29,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
             TOGame.SpriteBatch.Draw(
             Pixel,
-            new Rectangle((new Vector2(60, 25) + InnerWindowOffset).ToPoint(), new Point(TOGame.PlayerManager.Health * 2, 10)),
+            new Rectangle((new Vector2(60, 25) + InnerWindowOffset).ToPoint(), new Point(TOGame.Player.Health * 2, 10)),
             TitleBarColor);
 
             base.Render(gameTime);

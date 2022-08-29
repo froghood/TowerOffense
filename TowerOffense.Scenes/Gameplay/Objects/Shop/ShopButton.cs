@@ -32,7 +32,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
             _color = color;
 
             Clicked += (_, _) => {
-                if (TOGame.PlayerManager.Money < _price) return;
+                if (TOGame.Player.Money < _price) return;
                 System.Console.WriteLine(towerType);
 
                 if (towerType == typeof(GravityTower)) {
@@ -48,7 +48,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 }
 
                 window.PurchaseOffset += Vector2.One * 24;
-                TOGame.PlayerManager.Charge(_price);
+                TOGame.Player.Charge(_price);
                 var sound = TOGame.Assets.Sounds["Sounds/Purchase"].CreateInstance();
                 sound.Volume = TOGame.Settings.Volume;
                 sound.Play();
@@ -78,7 +78,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 if (Hovering) {
                     TOGame.SpriteBatch.Draw(SceneWindow.Pixel,
                         Bounds,
-                        (_price <= TOGame.PlayerManager.Money ? Color.White : Color.Red) * 0.3f);
+                        (_price <= TOGame.Player.Money ? Color.White : Color.Red) * 0.3f);
                 }
             }
 

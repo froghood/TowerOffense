@@ -37,6 +37,10 @@ namespace TowerOffense.Objects.Common {
             return _enemies.Where(enemy => !enemy.IsDestroyed);
         }
 
+        public IEnumerable<Tower> GetTowers() {
+            return _towers.Where(tower => !tower.IsDestroyed);
+        }
+
         public override void Update(GameTime gameTime) {
             _towers.RemoveAll(obj => obj.IsDestroyed);
             _enemies.RemoveAll(obj => obj.IsDestroyed);

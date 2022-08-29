@@ -41,7 +41,7 @@
 
 #begin Sounds/GameOver.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/GameOver.mp3
 

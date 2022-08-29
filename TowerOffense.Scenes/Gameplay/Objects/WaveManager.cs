@@ -53,14 +53,13 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                 spawnGroup.Update(gameTime);
                 foreach (var spawn in spawnGroup.DequeueSpawns()) {
 
-                    int index = _random.Next(_portals.Count);
+                    int index = TOGame.Random.Next(_portals.Count);
 
                     var portal = _portals[index];
 
-                    System.Console.WriteLine(spawn);
-
                     var enemy = (spawn) switch {
                         "Spider" => _entityManager.CreateEnemy<Spider>(portal.GetSpawnPosition(), true),
+                        "Beetle" => _entityManager.CreateEnemy<Beetle>(portal.GetSpawnPosition(), true),
                         _ => throw new Exception(),
                     };
 

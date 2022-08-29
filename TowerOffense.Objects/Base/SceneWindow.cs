@@ -105,7 +105,7 @@ namespace TowerOffense.Objects.Base {
             Scene scene,
             Point size,
             Vector2? position = null,
-            int titleBarHeight = 24,
+            int titleBarHeight = 32,
             int borderThickness = 1) : base(scene) {
 
             var game = TOGame.Instance;
