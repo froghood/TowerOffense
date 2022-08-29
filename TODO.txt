@@ -6,10 +6,10 @@
 ✓ hud color changes
 ✓ worm enemy
 ✓ electro target healthy
-* waves
+✓ waves
 ✓ better title screen
-* credits
+✓ credits
 * balancing
 
 # name ideas
-* Window Warfare
+✓ Window Warfare
