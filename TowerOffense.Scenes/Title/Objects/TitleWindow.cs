@@ -5,7 +5,6 @@ using Microsoft.Xna.Framework.Input;
 using TowerOffense.Objects.Base;
 using TowerOffense.Objects.Common;
 using TowerOffense.Scenes;
-using TowerOffense.Scenes.Example;
 using TowerOffense.Scenes.Gameplay;
 
 namespace TowerOffense.Scenes.Title.Objects {

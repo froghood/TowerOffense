@@ -1,7 +1,6 @@
 using Microsoft.Xna.Framework;
 using TowerOffense.Objects.Common;
 using TowerOffense.Objects.Towers;
-using TowerOffense.Scenes.GameOver;
 using TowerOffense.Scenes.Gameplay.Objects;
 using TowerOffense.Scenes.Gameplay.Objects.Shop;
 

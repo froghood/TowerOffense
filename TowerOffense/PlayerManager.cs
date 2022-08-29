@@ -1,6 +1,5 @@
 using System;
 using TowerOffense;
-using TowerOffense.Scenes.GameOver;
 
 namespace TowerOffense {
     public class PlayerManager {
