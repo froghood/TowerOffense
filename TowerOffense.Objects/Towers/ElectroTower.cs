@@ -32,7 +32,7 @@ namespace TowerOffense.Objects.Towers {
 
             _enemiesInRange = GetEnemiesInRange();
 
-            var first = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).FirstOrDefault();
+            var first = _enemiesInRange.Where(e => e.State != EnemyState.Neutralized).OrderByDescending(e => e.MaxHealth).FirstOrDefault();
 
             _targetedEnemies = (first != null) ?
                 new List<Enemy> { first } : new List<Enemy>();

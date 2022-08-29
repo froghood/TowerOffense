@@ -15,12 +15,8 @@ namespace TowerOffense.Objects.Base {
 
         public Vector2 Offset { get; set; }
 
-        public Point CenterPosition {
-            get => new Point(_form.Location.X, _form.Location.Y) + (InnerWindowOffset + InnerSize.ToVector2() / 2).ToPoint();
-            set {
-                var centerPosition = value - (InnerWindowOffset + InnerSize.ToVector2() / 2).ToPoint();
-                _form.Location = new System.Drawing.Point(centerPosition.X, centerPosition.Y);
-            }
+        public Vector2 CenterPosition {
+            get => Position + InnerWindowCenterOffset;
         }
 
         public Vector2 SmoothPosition { get; set; }

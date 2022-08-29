@@ -13,6 +13,7 @@ using TowerOffense.Extensions;
 using System.IO;
 using Microsoft.Xna.Framework.Audio;
 using Newtonsoft.Json;
+using System.Linq;
 
 namespace TowerOffense {
     public class TOGame : Game {
@@ -87,13 +88,14 @@ namespace TowerOffense {
             _settings = JsonConvert.DeserializeObject<Settings>(settingsJson);
 
             // sprites
-            foreach (var path in Directory.GetFiles("./Content/Sprites", "*.png")) {
+            foreach (var path in Directory.GetFiles("./Content/Sprites", "*.*").Where(s => s.EndsWith(".png") || s.EndsWith(".xnb"))) {
                 System.Console.WriteLine(path);
                 _assets.LoadTexture($"Sprites/{Path.GetFileNameWithoutExtension(path)}");
             }
 
             // sounds
-            foreach (var path in Directory.GetFiles("./Content/Sounds", "*.mp3")) {
+
+            foreach (var path in Directory.GetFiles("./Content/Sounds", "*.*").Where(s => s.EndsWith(".mp3") || s.EndsWith(".xnb"))) {
                 _assets.LoadSound($"Sounds/{Path.GetFileNameWithoutExtension(path)}");
             }
 

@@ -9,6 +9,7 @@ using TowerOffense.Objects.Towers;
 namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
     public class ShopButton : Button {
 
+        private SceneWindow _window;
         private int _price;
         private string _name;
         private string[] _lines;
@@ -26,6 +27,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
             window,
             bounds) {
 
+            _window = window;
             _price = price;
             _name = name;
             _lines = lines;
@@ -64,36 +66,54 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
 
         public override void Render(GameTime gameTime) {
 
-            if (Texture != null) {
-                TOGame.SpriteBatch.Draw(
-                    Texture,
-                    Bounds,
-                    Texture.Bounds,
-                    Color.White,
-                    0f,
-                    Vector2.Zero,
-                    SpriteEffects.None,
-                    0f);
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/MilkyNice");
 
-                if (Hovering) {
-                    TOGame.SpriteBatch.Draw(SceneWindow.Pixel,
-                        Bounds,
-                        (_price <= TOGame.Player.Money ? Color.White : Color.Red) * 0.3f);
+            TOGame.SpriteBatch.Draw(
+                Texture,
+                Bounds,
+                Texture.Bounds,
+                Color.White,
+                0f,
+                Vector2.Zero,
+                SpriteEffects.None,
+                1f);
+
+            if (Hovering) {
+                TOGame.SpriteBatch.Draw(SceneWindow.Pixel,
+                    Bounds,
+                    (_price <= TOGame.Player.Money ? Color.White : Color.Red) * 0.3f);
+
+                for (int i = 0; i < _lines.Length; i++) {
+                    string line = _lines[i];
+                    var lineSize = spriteFont.MeasureString(line);
+
+                    TOGame.SpriteBatch.DrawString(
+                        spriteFont,
+                        line,
+                        Vector2.UnitX * _window.InnerWindowCenterOffset +
+                        Vector2.UnitY * (Bounds.Bottom + 48f + 24f * i),
+                        _color,
+                        0f,
+                        lineSize * Vector2.UnitX / 2f,
+                        0.6f,
+                        SpriteEffects.None,
+                        0f);
                 }
             }
 
-            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
-            string text = _name;
+
+
+            string text = $"{_name} ${_price}";
             Vector2 textSize = spriteFont.MeasureString(text);
 
             TOGame.SpriteBatch.DrawString(
                 spriteFont,
                 text,
-                Bounds.Location.ToVector2() + new Vector2(Bounds.Size.X / 2f, Bounds.Size.Y) + Vector2.UnitY * 5,
+                Bounds.Location.ToVector2() + new Vector2(Bounds.Size.X / 2f, Bounds.Size.Y),
                 _color,
                 0f,
                 textSize * Vector2.UnitX / 2f,
-                0.25f,
+                0.8f,
                 SpriteEffects.None,
                 0f);
 

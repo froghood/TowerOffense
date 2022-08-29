@@ -13,13 +13,16 @@ namespace TowerOffense.Objects.Base {
         public EnemyState State { get => _enemyState; }
         public float StateTime { get => _stateTime; }
         public float StateDuration { get => _stateDuration; }
+        public bool StatePaused { get => _statePaused; }
 
-        protected float MaxHealth { get; set; }
-        protected float Health { get; set; }
-        protected int Prize { get; set; } = 1;
+        public float MaxHealth { get; set; }
+        public float Health { get; set; }
+        public int Prize { get; set; } = 1;
 
         private float _stateTime;
         private float _stateDuration;
+        private bool _statePaused;
+
         private float _shakeTime;
         private float _shakeAmount;
         private EnemyState _enemyState;
@@ -103,7 +106,7 @@ namespace TowerOffense.Objects.Base {
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Pixelfont");
             var text = Math.Max(0, _stateDuration - _stateTime).ToString("0.00");
 
-            if (State != EnemyState.Attacking && !TOGame.Player.Dead) {
+            if (State != EnemyState.Attacking && !TOGame.Player.Dead && !_statePaused) {
                 TOGame.SpriteBatch.Draw(Pixel,
                 new Rectangle(
                     InnerWindowOffset.ToPoint(),
@@ -118,6 +121,11 @@ namespace TowerOffense.Objects.Base {
                 BorderColor = TitleBarColor * 0.5f;
             }
 
+            TOGame.SpriteBatch.Draw(Pixel,
+                new Rectangle(
+                    (InnerWindowOffset + Vector2.UnitY * (InnerSize.Y - 2f)).ToPoint(),
+                    new Point((int)((float)InnerSize.X * (Health / MaxHealth)), 2)),
+                new Color(0, 255, 0));
 
             foreach (var particle in _particles) {
                 particle.Render(gameTime);
@@ -145,11 +153,12 @@ namespace TowerOffense.Objects.Base {
             Health -= amount;
         }
 
-        public void ChangeState(EnemyState enemyState, float duration) {
+        public void ChangeState(EnemyState enemyState, float duration, bool pause = false) {
             StateChanged?.Invoke(this, enemyState);
             _enemyState = enemyState;
             _stateTime = 0f;
             _stateDuration = duration;
+            _statePaused = pause;
         }
 
         public List<Tower> GetTowersInRange(float range) {

@@ -12,7 +12,7 @@ namespace TowerOffense.Objects.Enemies {
         private const float ActiveDuration = 10f;
         private const float AttackingDuration = 1.25f;
         private const float NeutralizedDuration = 8f;
-        private const int DamageAmount = 2;
+        private const int DamageAmount = 5;
         private float _moveTime;
         private Vector2 _velocity;
         private float _speed = 400;
@@ -98,7 +98,7 @@ namespace TowerOffense.Objects.Enemies {
                 _moveTime += deltaTime;
 
                 while (_moveTime > 1) {
-                    _moveTime -= 1;
+                    _moveTime -= 1 + TOGame.Random.NextSingle() * 0.5f - 0.25f;
                     _angle = new Random().NextSingle() * MathF.Tau;
                 }
 

@@ -19,14 +19,14 @@ namespace TowerOffense.Objects.Common {
             _enemies = new List<Enemy>();
         }
 
-        public Enemy CreateEnemy<T>(params object[] e) where T : Enemy {
+        public T CreateEnemy<T>(params object[] e) where T : Enemy {
             var args = new object[] { Scene, this }.Concat(e).ToArray();
             var enemy = (T)Activator.CreateInstance(typeof(T), args);
             _enemies.Add(enemy);
             return enemy;
         }
 
-        public Tower CreateTower<T>(params object[] e) where T : Tower {
+        public T CreateTower<T>(params object[] e) where T : Tower {
             var args = new object[] { Scene, this }.Concat(e).ToArray();
             var tower = (T)Activator.CreateInstance(typeof(T), args);
             _towers.Add(tower);

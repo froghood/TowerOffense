@@ -23,7 +23,7 @@ namespace TowerOffense.Objects.Towers {
 
             Range = 240f;
             AttackSpeed = 0.25f;
-            Damage = 0.3f;
+            Damage = 0.5f;
             SellPrice = 8;
         }
 

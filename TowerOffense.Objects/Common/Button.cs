@@ -9,8 +9,8 @@ namespace TowerOffense.Objects.Common {
 
         public bool Hovering {
             get => (SceneWindow.MouseHovering &&
-            SceneWindow.MouseInnerPosition.X >= Bounds.Left && SceneWindow.MouseInnerPosition.X < Bounds.Right &&
-            SceneWindow.MouseInnerPosition.Y >= Bounds.Top && SceneWindow.MouseInnerPosition.Y < Bounds.Bottom);
+            SceneWindow.MouseState.X >= Bounds.Left && SceneWindow.MouseState.X < Bounds.Right &&
+            SceneWindow.MouseState.Y >= Bounds.Top && SceneWindow.MouseState.Y < Bounds.Bottom);
         }
         public Rectangle Bounds { get; set; }
         public Texture2D Texture { get; set; }
@@ -40,7 +40,11 @@ namespace TowerOffense.Objects.Common {
 
         public override void Render(GameTime gameTime) {
 
-            SceneWindow.Draw(Hovering ? HoverTexture : Texture, Bounds.Location.ToVector2(), Color.White);
+            TOGame.SpriteBatch.Draw(
+                Hovering ? HoverTexture : Texture,
+                Bounds,
+                Hovering ? HoverTexture.Bounds : Texture.Bounds,
+                Color.White, 0f, Vector2.Zero, SpriteEffects.None, 0f);
 
             base.Render(gameTime);
         }

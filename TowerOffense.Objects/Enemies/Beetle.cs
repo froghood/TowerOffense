@@ -34,7 +34,7 @@ namespace TowerOffense.Objects.Enemies {
 
             MaxHealth = 80f;
             Health = MaxHealth;
-            Prize = 8;
+            Prize = 4;
 
             _noise = new FastNoiseLite();
             _noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);

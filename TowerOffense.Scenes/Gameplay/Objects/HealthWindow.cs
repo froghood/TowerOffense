@@ -9,10 +9,15 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
             Position -= Vector2.UnitX * InnerWindowCenterOffset;
 
-            ClearColor = new Color(104, 66, 74);
-            TitleBarColor = new Color(186, 120, 93);
+            // ClearColor = new Color(104, 66, 74);
+            // TitleBarColor = new Color(186, 120, 93);
+            // FocusedBorderColor = TitleBarColor;
+            // BorderColor = FocusedBorderColor * 0.5f;
+
+            ClearColor = new Color(30, 30, 40);
+            TitleBarColor = Color.White;
             FocusedBorderColor = TitleBarColor;
-            BorderColor = FocusedBorderColor * 0.5f;
+            BorderColor = new Color(128, 128, 128);
 
             Closeable = false;
 
@@ -20,17 +25,17 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         public override void Render(GameTime gameTime) {
 
-            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures["Sprites/Heart"], InnerWindowOffset + Vector2.One * 8f, new Color(40, 25, 23));
+            TOGame.SpriteBatch.Draw(TOGame.Assets.Textures["Sprites/Heart"], InnerWindowOffset + Vector2.One * 8f, TitleBarColor);
 
             TOGame.SpriteBatch.Draw(
                 Pixel,
                 new Rectangle((new Vector2(58, 23) + InnerWindowOffset).ToPoint(), new Point(204, 14)),
-                new Color(40, 25, 32));
+                new Color(128, 140, 160));
 
             TOGame.SpriteBatch.Draw(
-            Pixel,
-            new Rectangle((new Vector2(60, 25) + InnerWindowOffset).ToPoint(), new Point(TOGame.Player.Health * 2, 10)),
-            TitleBarColor);
+                Pixel,
+                new Rectangle((new Vector2(60, 25) + InnerWindowOffset).ToPoint(), new Point(TOGame.Player.Health * 2, 10)),
+                TitleBarColor);
 
             base.Render(gameTime);
         }

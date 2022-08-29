@@ -37,10 +37,15 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
             Position -= Vector2.UnitX * Size.X;
 
-            ClearColor = new Color(104, 66, 74);
-            TitleBarColor = new Color(186, 120, 93);
+            ClearColor = new Color(30, 30, 40);
+            TitleBarColor = Color.White;
             FocusedBorderColor = TitleBarColor;
-            BorderColor = new Color();
+            BorderColor = new Color(128, 128, 128);
+
+            // ClearColor = new Color(104, 66, 74);
+            // TitleBarColor = new Color(186, 120, 93);
+            // FocusedBorderColor = TitleBarColor;
+            // BorderColor = new Color();
 
             _entityManager = entityManager;
             string wavesJsonRaw = File.ReadAllText(wavesJsonPath);
@@ -57,9 +62,10 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
                     var portal = _portals[index];
 
-                    var enemy = (spawn) switch {
+                    Enemy enemy = (spawn) switch {
                         "Spider" => _entityManager.CreateEnemy<Spider>(portal.GetSpawnPosition(), true),
                         "Beetle" => _entityManager.CreateEnemy<Beetle>(portal.GetSpawnPosition(), true),
+                        "Worm" => _entityManager.CreateEnemy<Worm>(5, portal.GetSpawnPosition(), true),
                         _ => throw new Exception(),
                     };
 
@@ -85,17 +91,17 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         public override void Render(GameTime gameTime) {
 
-            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/MilkyNice");
             string text = $"wave {_wave}";
             var fontSize = spriteFont.MeasureString(text);
 
             TOGame.SpriteBatch.DrawString(spriteFont,
                 text,
                 InnerWindowCenterOffset,
-                new Color(40, 25, 43),
+                Color.White,
                 0f,
                 fontSize / 2f,
-                0.25f,
+                1f,
                 SpriteEffects.None,
                 0f);
 

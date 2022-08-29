@@ -17,11 +17,10 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
         private ShopButton _nuclearTowerButton;
 
         public Shop(Scene scene, EntityManager entityManager, WaveManager waveManager) :
-        base(scene, new Point(490, 300), TOGame.DisplaySize.ToVector2() / 2f) {
-
-
+        base(scene, new Point(490, 340), TOGame.DisplaySize.ToVector2() / 2f) {
 
             Position -= InnerWindowCenterOffset;
+            PurchaseOffset = Vector2.One * 24;
 
             _entityManager = entityManager;
             _waveManager = waveManager;
@@ -31,9 +30,12 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 _entityManager,
                 new Rectangle((InnerWindowOffset + new Vector2(10, 50)).ToPoint(), new Point(150, 150)),
                 typeof(GravityTower),
-                8,
+                6,
                 "Gravity",
-                new[] { "infinite range", "targets immediate threats", "low damage" },
+                new[] {
+                    "infinite range",
+                    "targets enemies about to attack",
+                    "low damage" },
                 new Color(225, 185, 255));
             _gravityTowerButton.Texture = TOGame.Assets.Textures["Sprites/GravityTowerSplash"];
 
@@ -44,7 +46,10 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 typeof(ElectroTower),
                 10,
                 "Electro",
-                new[] { "average range", "targets healthy enemies", "high damage" },
+                new[] {
+                    "average range",
+                    "targets enemies with high health",
+                    "high damage" },
                 TitleBarColor = new Color(167, 236, 255));
             _electroTowerButton.Texture = TOGame.Assets.Textures["Sprites/ElectroTowerSplash"];
 
@@ -53,9 +58,12 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 _entityManager,
                 new Rectangle((InnerWindowOffset + new Vector2(330, 50)).ToPoint(), new Point(150, 150)),
                 typeof(NuclearTower),
-                12,
+                10,
                 "Nuclear",
-                new[] { "short range", "targets multiple enemies", "high group damage" },
+                new[] {
+                    "short range",
+                    "targets all enemies in range",
+                    "high group damage" },
                 TitleBarColor = new Color(160, 255, 150));
             _nuclearTowerButton.Texture = TOGame.Assets.Textures["Sprites/NuclearTowerSplash"];
 
@@ -80,7 +88,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
             _electroTowerButton.Render(gameTime);
             _nuclearTowerButton.Render(gameTime);
 
-            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/Daydream");
+            var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/MilkyNice");
             string text = "Tower  Shop";
             Vector2 textSize = spriteFont.MeasureString(text);
 
@@ -88,11 +96,11 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
                 spriteFont,
                 text,
                 (Vector2.UnitX * InnerWindowCenterOffset.X +
-                Vector2.UnitY * 8) + InnerWindowOffset,
+                Vector2.UnitY * 0) + InnerWindowOffset,
                 Color.White,
                 0f,
                 textSize * Vector2.UnitX / 2f,
-                0.4f,
+                1.2f,
                 SpriteEffects.None,
                 0f);
 
