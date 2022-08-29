@@ -9,3 +9,4 @@
 * waves
 * better title screen
 * credits
+* balancing
