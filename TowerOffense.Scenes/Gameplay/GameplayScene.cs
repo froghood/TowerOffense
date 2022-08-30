@@ -28,6 +28,10 @@ namespace TowerOffense.Scenes.Gameplay {
                     TOGame.Scenes.PopScene();
                 };
                 AddObject(gameOverWindow);
+                var sound = TOGame.Assets.Sounds["Sounds/GameOver"].CreateInstance();
+                sound.Volume = TOGame.Settings.Volume;
+                sound.Play();
+
             };
 
             TOGame.Player.OnWin += (_, _) => {
@@ -36,6 +40,9 @@ namespace TowerOffense.Scenes.Gameplay {
                     TOGame.Scenes.PopScene();
                 };
                 AddObject(victoryWindow);
+                var sound = TOGame.Assets.Sounds["Sounds/Victory"].CreateInstance();
+                sound.Volume = TOGame.Settings.Volume;
+                sound.Play();
             };
 
             AddObject(_entityManager);

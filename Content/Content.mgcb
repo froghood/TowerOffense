@@ -76,6 +76,12 @@
 /processorParam:Quality=Best
 /build:Sounds/SpiderBite.mp3
 
+#begin Sounds/Victory.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:Sounds/Victory.mp3
+
 #begin Sounds/WormBite.mp3
 /importer:Mp3Importer
 /processor:SoundEffectProcessor

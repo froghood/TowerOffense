@@ -54,7 +54,7 @@ namespace TowerOffense.Objects.Enemies {
                         if (State == EnemyState.Attacking) {
                             TOGame.Player.Damage(DamageAmount);
                             var sound = TOGame.Assets.Sounds["Sounds/SpiderBite"].CreateInstance();
-                            sound.Volume = 0.1f;
+                            sound.Volume = TOGame.Settings.Volume;
                             sound.Play();
                         }
                         break;
