@@ -22,6 +22,7 @@ namespace TowerOffense.Scenes {
                 _sceneObjects.Add(sceneObject);
                 if (typeof(T).IsSubclassOf(typeof(SceneWindow))) {
                     _sceneWindows.Add(sceneObject as SceneWindow);
+                    (sceneObject as SceneWindow).Form.TopMost = true;
                 }
             };
 

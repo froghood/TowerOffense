@@ -16,7 +16,7 @@
             {
                 "Enemy": "Spider",
                 "StartTime": 1.5,
-                "Amount": 8,
+                "Amount": 9,
                 "Interval": 1.1
             }
         ]
@@ -27,7 +27,7 @@
             {
                 "Enemy": "Spider",
                 "StartTime": 1.5,
-                "Amount": 6,
+                "Amount": 7,
                 "Interval": 2
             },
             {
@@ -44,7 +44,7 @@
             {
                 "Enemy": "Spider",
                 "StartTime": 2,
-                "Amount": 4,
+                "Amount": 5,
                 "Interval": 3
             },
             {
@@ -108,6 +108,12 @@
                 "StartTime": 1.5,
                 "Amount": 15,
                 "Interval": 0.1
+            },
+            {
+                "Enemy": "Worm",
+                "StartTime": 3,
+                "Amount": 1,
+                "Interval": 0
             }
         ]
     },
@@ -117,14 +123,14 @@
             {
                 "Enemy": "Spider",
                 "StartTime": 1.5,
-                "Amount": 5,
-                "Interval": 0
+                "Amount": 10,
+                "Interval": 0.25
             },
             {
                 "Enemy": "Beetle",
                 "StartTime": 4,
-                "Amount": 3,
-                "Interval": 0
+                "Amount": 4,
+                "Interval": 0.25
             },
             {
                 "Enemy": "Worm",
@@ -138,10 +144,16 @@
         "Portals": 5,
         "SpawnGroups": [
             {
-                "Enemy": "Worm",
+                "Enemy": "Beetle",
                 "StartTime": 2.5,
-                "Amount": 5,
-                "Interval": 0.5
+                "Amount": 3,
+                "Interval": 0.25
+            },
+            {
+                "Enemy": "Worm",
+                "StartTime": 5.5,
+                "Amount": 3,
+                "Interval": 0.25
             }
         ]
     }

@@ -81,7 +81,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
                 if (_entityManager.RemainingEnemies == 0) {
                     _waveInProgress = false;
                     if (_wave >= 10) {
-
+                        TOGame.Player.Win();
                     } else {
                         _wave++;
                         OpenShop();
@@ -130,7 +130,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects {
 
         public void NextWave() {
 
-            if (_wave > _wavesJson.Count) return; // return if no more waves
+            //if (_wave > _wavesJson.Count) TOGame.Player.Win(); // return if no more waves
 
             _time = 0;
             _waveInProgress = true;

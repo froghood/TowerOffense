@@ -201,13 +201,13 @@ namespace TowerOffense.Objects.Base {
 
 
             Position = new Vector2() {
-                X = Math.Clamp(Position.X, 0, 1920f - Size.X),
-                Y = Math.Clamp(Position.Y, 0, 1080f - Size.Y)
+                X = Math.Clamp(Position.X, 0, TOGame.DisplaySize.X - Size.X),
+                Y = Math.Clamp(Position.Y, 0, TOGame.DisplaySize.Y - Size.Y)
             };
 
             _form.Location = new System.Drawing.Point() {
-                X = (int)Math.Clamp(Position.X + Offset.X, 0, 1920 - Size.X),
-                Y = (int)Math.Clamp(Position.Y + Offset.Y, 0, 1080 - Size.Y)
+                X = (int)Math.Clamp(Position.X + Offset.X, 0, TOGame.DisplaySize.X - Size.X),
+                Y = (int)Math.Clamp(Position.Y + Offset.Y, 0, TOGame.DisplaySize.Y - Size.Y)
             };
         }
 

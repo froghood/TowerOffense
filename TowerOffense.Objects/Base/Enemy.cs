@@ -121,11 +121,13 @@ namespace TowerOffense.Objects.Base {
                 BorderColor = TitleBarColor * 0.5f;
             }
 
-            TOGame.SpriteBatch.Draw(Pixel,
+            if (!TOGame.Player.RunFinished) {
+                TOGame.SpriteBatch.Draw(Pixel,
                 new Rectangle(
                     (InnerWindowOffset + Vector2.UnitY * (InnerSize.Y - 2f)).ToPoint(),
                     new Point((int)((float)InnerSize.X * (Health / MaxHealth)), 2)),
                 new Color(0, 255, 0));
+            }
 
             foreach (var particle in _particles) {
                 particle.Render(gameTime);

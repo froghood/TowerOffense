@@ -38,6 +38,7 @@ namespace TowerOffense.Objects.Enemies {
 
             _noise = new FastNoiseLite();
             _noise.SetNoiseType(FastNoiseLite.NoiseType.OpenSimplex2);
+            _noise.SetSeed(TOGame.Random.Next(int.MaxValue));
 
             Damaged += (sender, amount) => {
                 if (Health - amount <= 0f) {

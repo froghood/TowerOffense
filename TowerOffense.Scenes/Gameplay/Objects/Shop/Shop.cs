@@ -89,7 +89,7 @@ namespace TowerOffense.Scenes.Gameplay.Objects.Shop {
             _nuclearTowerButton.Render(gameTime);
 
             var spriteFont = TOGame.Instance.Content.Load<SpriteFont>("Fonts/MilkyNice");
-            string text = "Tower  Shop";
+            string text = "Tower Shop";
             Vector2 textSize = spriteFont.MeasureString(text);
 
             TOGame.SpriteBatch.DrawString(

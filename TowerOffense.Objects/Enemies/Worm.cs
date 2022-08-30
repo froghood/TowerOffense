@@ -19,8 +19,8 @@ namespace TowerOffense.Objects.Enemies {
 
         private float _time;
         private float _angle;
-        private float _speed = 150f;
-        private float _steeringSpeed = 0.75f;
+        private float _speed = 200f;
+        private float _steeringSpeed = 1f;
 
 
         private FastNoiseLite _noise;
@@ -75,7 +75,7 @@ namespace TowerOffense.Objects.Enemies {
             StateChanged += (sender, state) => {
                 switch (state) {
                     case EnemyState.Active:
-                        _speed = 150f;
+                        _speed = 200f;
                         if (State == EnemyState.Neutralized) {
                             System.Console.WriteLine("t");
                             Health = MaxHealth;
@@ -149,7 +149,7 @@ namespace TowerOffense.Objects.Enemies {
 
             if (State != EnemyState.Neutralized) {
 
-                var noiseAngle = _startAngle + _noise.GetNoise(_time * 3f, 0) * MathF.Tau;
+                var noiseAngle = _startAngle + _noise.GetNoise(_time * 5f, 0) * MathF.Tau;
                 _noiseForce = new Vector2() {
                     X = MathF.Cos(noiseAngle),
                     Y = MathF.Sin(noiseAngle)
@@ -161,9 +161,9 @@ namespace TowerOffense.Objects.Enemies {
                 } * 1.5f;
 
                 _targetForce = _noiseForce += _borderForce;
+                //_targetForce.Normalize();
 
                 _targetForceNormalized = _targetForce;
-                _targetForceNormalized.Normalize();
 
                 _steeringSigns = new Vector2() {
                     X = MathF.Sign(_targetForceNormalized.X - _angleVector.X),
