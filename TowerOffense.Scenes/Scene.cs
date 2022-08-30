@@ -62,7 +62,7 @@ namespace TowerOffense.Scenes {
                 graphicsDevice.SetRenderTarget(windowObject.RenderTarget);
                 graphicsDevice.Clear(windowObject.ClearColor);
 
-                TOGame.SpriteBatch.Begin(SpriteSortMode.BackToFront, samplerState: SamplerState.LinearClamp);
+                TOGame.SpriteBatch.Begin(SpriteSortMode.Deferred, samplerState: SamplerState.LinearClamp);
                 windowObject.Render(gameTime);
                 TOGame.SpriteBatch.End();
 

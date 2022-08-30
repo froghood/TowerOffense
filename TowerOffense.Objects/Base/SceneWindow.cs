@@ -51,8 +51,8 @@ namespace TowerOffense.Objects.Base {
         public int TitleBarHeight { get => _titleBarHeight; }
         public Color TitleBarColor { get; set; } = Color.White;
         public int BorderThickness { get => _borderThickness; }
-        public Color BorderColor { get; set; } = Color.White;
-        public Color FocusedBorderColor { get; set; } = new Color(180, 180, 180);
+        public Color BorderColor { get; set; } = new Color(128, 128, 128);
+        public Color FocusedBorderColor { get; set; } = Color.White;
         public Vector2 InnerWindowOffset { get => new Vector2(_borderThickness, _borderThickness + _titleBarHeight); }
         public Vector2 InnerWindowCenterOffset {
             get => InnerWindowOffset + InnerSize.ToVector2() / 2;

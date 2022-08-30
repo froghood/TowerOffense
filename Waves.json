@@ -95,8 +95,8 @@
             {
                 "Enemy": "Beetle",
                 "StartTime": 1.5,
-                "Amount": 4,
-                "Interval": 3
+                "Amount": 5,
+                "Interval": 2.75
             }
         ]
     },
@@ -107,7 +107,7 @@
                 "Enemy": "Spider",
                 "StartTime": 1.5,
                 "Amount": 15,
-                "Interval": 0.1
+                "Interval": 0.5
             },
             {
                 "Enemy": "Worm",
@@ -123,13 +123,13 @@
             {
                 "Enemy": "Spider",
                 "StartTime": 1.5,
-                "Amount": 10,
+                "Amount": 8,
                 "Interval": 0.25
             },
             {
                 "Enemy": "Beetle",
                 "StartTime": 4,
-                "Amount": 4,
+                "Amount": 3,
                 "Interval": 0.25
             },
             {

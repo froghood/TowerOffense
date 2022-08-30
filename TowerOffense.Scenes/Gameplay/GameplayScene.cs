@@ -19,6 +19,8 @@ namespace TowerOffense.Scenes.Gameplay {
 
         public override void Initialize() {
 
+            AddObject(new FpsWindow(this));
+
             TOGame.Player.Restart(100, 15); //15
             TOGame.Player.OnDeath += (_, _) => {
                 var gameOverWindow = new GameOverWindow(this, _waveManager);
