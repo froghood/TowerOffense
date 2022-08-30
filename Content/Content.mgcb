@@ -13,13 +13,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Fonts/Daydream.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
-/processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:Fonts/Daydream.spritefont
-
 #begin Fonts/MilkyNice.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -78,7 +71,7 @@
 
 #begin Sounds/Victory.mp3
 /importer:Mp3Importer
-/processor:SongProcessor
+/processor:SoundEffectProcessor
 /processorParam:Quality=Best
 /build:Sounds/Victory.mp3
 
